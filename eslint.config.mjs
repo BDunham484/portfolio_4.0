@@ -16,7 +16,8 @@ const eslintConfig = [
   {
     files: ["**/*.ts", "**/*.tsx"],
     rules: {
-      "no-unused-vars": "warn",
+      "@typescript-eslint/no-unused-vars": ["warn", { "args": "none", "vars": "local" }],
+      // "@typescript-eslint/no-unused-vars": "warn",
       "camelcase": "error", // Fixed the name
       "quotes": ["error", "single", { "avoidEscape": true }], // Enforce single quotes
       "semi": ["error", "always"], // Enforce semicolons
@@ -26,7 +27,7 @@ const eslintConfig = [
       "no-undef": "off", // Disallow undefined variables
       "react/jsx-no-undef": "error", // Disallow undefined JSX elements
       "react/jsx-uses-react": "off", // Not needed with React 17+ (if using JSX transform)
-      "react/jsx-uses-vars": "error", // Prevent unused variables in JSX
+      "react/jsx-uses-vars": "warn", // Prevent unused variables in JSX
       "react/prop-types": "off", // Disable if using TypeScript
       "react/no-unescaped-entities": "error", // Disallow unescaped characters
       "react/jsx-closing-bracket-location": ["error", "line-aligned"], // Enforce JSX closing bracket alignment
