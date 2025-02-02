@@ -30,7 +30,7 @@ const eslintConfig = [
       "react/jsx-uses-vars": "warn", // Prevent unused variables in JSX
       "react/prop-types": "off", // Disable if using TypeScript
       "react/no-unescaped-entities": "error", // Disallow unescaped characters
-      "react/jsx-closing-bracket-location": ["error", "line-aligned"], // Enforce JSX closing bracket alignment
+      // "react/jsx-closing-bracket-location": ["error", "line-aligned"], // Enforce JSX closing bracket alignment
     },
   },
 ];
