@@ -1,13 +1,15 @@
 'use client';
-import { VscChromeClose, VscMenu } from 'react-icons/vsc';
-import { useCallback, useState } from 'react';
-import { usePathname } from 'next/navigation';
-import styles from './Header.module.css';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { VscChromeClose, VscMenu } from 'react-icons/vsc';
+import styles from './Header.module.css';
 
 const Header = () => {
     const {
+        header,
+        navLink,
         navActive,
         navMobileLinks,
         mobileNav,
@@ -16,20 +18,6 @@ const Header = () => {
     } = styles;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const pathname = usePathname();
-
-    const hamburgerIcon = (
-        <VscMenu
-            className={hamburger}
-            onClick={() => setIsMenuOpen(prevState => !prevState)}
-        />
-    );
-
-    const closeIcon = (
-        <VscChromeClose
-            className={hamburger}
-            onClick={() => setIsMenuOpen(prevState => !prevState)}
-        />
-    );
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -51,8 +39,8 @@ const Header = () => {
     ];
 
     return (
-        <header>
-            <div>
+        <header className={header}>
+            <div onClick={closeMobileMenu}>
                 <h1>
                     <Link href='/'>
                         Brad Dunham
@@ -62,19 +50,32 @@ const Header = () => {
                     Developer
                 </p>
             </div>
-            <nav id={nav}>
+            <nav className={nav}>
                 <ul>
                     {links.map(({ href, label }) => (
                         <li key={href}>
-                            <Link href={href} className={pathname === href ? navActive : ''}>
+                            <button
+                                className={pathname === href ? navActive : navLink}
+                            >
+                                <Link href={href}>
+                                    {label}
+                                </Link>
+                            </button>
+                            {/* <Link href={href} className={pathname === href ? navActive : navLink}>
                                 {label}
-                            </Link>
+                            </Link> */}
                         </li>
                     ))}
                 </ul>
             </nav>
-            < nav id={mobileNav}>
-                {isMenuOpen ? closeIcon : hamburgerIcon}
+            <nav className={mobileNav}>
+                <button
+                    className={hamburger}
+                    onClick={() => setIsMenuOpen(prevState => !prevState)}
+                    aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                >
+                    {isMenuOpen ? <VscChromeClose /> : <VscMenu />}
+                </button>
                 {isMenuOpen &&
                     <ul>
                         {mobileLinks.map(({ href, label, delay }) => (
@@ -85,9 +86,14 @@ const Header = () => {
                                 transition={{ delay }}
                                 onClick={closeMobileMenu}
                             >
-                                <Link href={href} className={navMobileLinks}>
-                                    {label}
-                                </Link>
+                                <button
+                                    className={navMobileLinks}
+                                    aria-label={`${label} Link`}
+                                >
+                                    <Link href={href}>
+                                        {label}
+                                    </Link>
+                                </button>
                             </motion.li>
                         ))}
                     </ul>

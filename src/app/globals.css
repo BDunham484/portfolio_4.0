@@ -45,6 +45,14 @@ a {
   text-decoration: none;
 }
 
+li {
+  list-style-type: none;
+}
+
+button {
+  color: antiquewhite;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
