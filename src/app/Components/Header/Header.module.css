@@ -75,34 +75,34 @@
         -1.2rem -1.2rem 2.4rem #494848;
 }
 
-#MobileNavigation {
+#mobileNav {
     display: none;
 }
 
-#Navigation {
+#nav {
     display: block;
 }
 
 /* Media Queries */
 @media screen and (max-width: 300px) {
     :global(header h1) {
-        font-size: 15px;
+        font-size: 1.5rem;
     }
 
-    #hamburger {
-        width: 30px;
+    .hamburger {
+        width: 3rem;
     }
 }
 
 @media screen
 and (orientation: portrait)
 and (max-width: 1000px) {
-    #MobileNavigation {
+    #mobileNav {
         display: flex;
         align-items: center;
     }
 
-    #MobileNavigation ul {
+    #mobileNav ul {
         display: flex;
         flex-direction: column;
         position: absolute; 
@@ -112,19 +112,19 @@ and (max-width: 1000px) {
         height: 88vh;
         background-color: #383737;
         padding: 0;
-        border-top: 2px solid antiquewhite;
+        border-top: .2rem solid antiquewhite;
     }
 
-    #hamburger {
+    .hamburger {
         color: antiquewhite;
-        width: 40px;
+        width: 4rem;
         height: auto;
         position: absolute;
         right: 10%;
         cursor: pointer;
     }
 
-    #Navigation {
+    #nav {
         display: none;
     }
 }
@@ -133,15 +133,15 @@ and (max-width: 1000px) {
 and (orientation: landscape)
 and (maxwidth: 800px) and (min-width: 500px) {
     :global(header h1) {
-        font-size: 16px;
+        font-size: 1.6rem;
     }
 
-    #MobileNavigation {
+    #mobileNav {
         display: flex;
         align-items: center;
     }
 
-    #MobileNavigation ul {
+    #mobileNav ul {
         display: flex;
         flex-direction: column;
         position: absolute; 
@@ -151,19 +151,19 @@ and (maxwidth: 800px) and (min-width: 500px) {
         height: 88vh;
         background-color: #383737;
         padding: 0;
-        border-top: 2px solid antiquewhite;
+        border-top: .2rem solid antiquewhite;
     }
 
-    #hamburger {
+    .hamburger {
         color: antiquewhite;
-        width: 30px;
+        width: 3rem;
         height: auto;
         position: absolute;
         right: 10%;
         cursor: pointer;
     }
 
-    #Navigation {
+    #nav {
         display: none;
     }
 }
@@ -172,12 +172,12 @@ and (maxwidth: 800px) and (min-width: 500px) {
 @media screen 
 and (orientation: landscape)
 and (max-device-width: 1200px) {
-    #MobileNavigation {
+    #mobileNav {
         display: flex;
         align-items: center;
     }
 
-    #MobileNavigation ul {
+    #mobileNav ul {
         display: flex;
         flex-direction: column;
         position: absolute; 
@@ -187,19 +187,19 @@ and (max-device-width: 1200px) {
         height: 88vh;
         background-color: #383737;
         padding: 0;
-        border-top: 2px solid antiquewhite;
+        border-top: .2rem solid antiquewhite;
     }
 
-    #hamburger {
+    .hamburger {
         color: antiquewhite;
-        width: 40px;
+        width: 4rem;
         height: auto;
         position: absolute;
         right: 10%;
         cursor: pointer;
     }
 
-    #Navigation {
+    #nav {
         display: none;
     }
 }

@@ -10,8 +10,8 @@ const Header = () => {
     const {
         navActive,
         navMobileLinks,
-        MobileNavigation,
-        Navigation,
+        mobileNav,
+        nav,
         hamburger,
     } = styles;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -19,14 +19,14 @@ const Header = () => {
 
     const hamburgerIcon = (
         <VscMenu
-            id={hamburger}
+            className={hamburger}
             onClick={() => setIsMenuOpen(prevState => !prevState)}
         />
     );
 
     const closeIcon = (
         <VscChromeClose
-            id={hamburger}
+            className={hamburger}
             onClick={() => setIsMenuOpen(prevState => !prevState)}
         />
     );
@@ -35,7 +35,7 @@ const Header = () => {
 
     const animateFrom = { opacity: 0, y: -80 };
     const animateTo = { opacity: 1, y: 0 };
-    
+
     const links = [
         { href: '/About', label: 'About' },
         { href: '/Projects', label: 'Projects' },
@@ -62,7 +62,7 @@ const Header = () => {
                     Developer
                 </p>
             </div>
-            <nav id={Navigation}>
+            <nav id={nav}>
                 <ul>
                     {links.map(({ href, label }) => (
                         <li key={href}>
@@ -73,7 +73,7 @@ const Header = () => {
                     ))}
                 </ul>
             </nav>
-            < nav id={MobileNavigation}>
+            < nav id={mobileNav}>
                 {isMenuOpen ? closeIcon : hamburgerIcon}
                 {isMenuOpen &&
                     <ul>
@@ -90,7 +90,8 @@ const Header = () => {
                                 </Link>
                             </motion.li>
                         ))}
-                    </ul>}
+                    </ul>
+                }
             </nav >
         </header>
     );
