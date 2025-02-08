@@ -54,16 +54,9 @@ const Header = () => {
                 <ul>
                     {links.map(({ href, label }) => (
                         <li key={href}>
-                            <button
-                                className={pathname === href ? navActive : navLink}
-                            >
-                                <Link href={href}>
-                                    {label}
-                                </Link>
-                            </button>
-                            {/* <Link href={href} className={pathname === href ? navActive : navLink}>
+                            <Link href={href} className={pathname === href ? navActive : navLink}>
                                 {label}
-                            </Link> */}
+                            </Link>
                         </li>
                     ))}
                 </ul>
@@ -86,14 +79,9 @@ const Header = () => {
                                 transition={{ delay }}
                                 onClick={closeMobileMenu}
                             >
-                                <button
-                                    className={navMobileLinks}
-                                    aria-label={`${label} Link`}
-                                >
-                                    <Link href={href}>
-                                        {label}
-                                    </Link>
-                                </button>
+                                <Link href={href} className={navMobileLinks}>
+                                    {label}
+                                </Link>
                             </motion.li>
                         ))}
                     </ul>

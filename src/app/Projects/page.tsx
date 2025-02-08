@@ -1,3 +1,5 @@
+'use client';
+
 const Projects = () => {
     console.log('Projects');
 

@@ -1,3 +1,5 @@
+'use client';
+
 const Contact = () => {
     console.log('Contact');
 

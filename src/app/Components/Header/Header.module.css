@@ -2,7 +2,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1vh 0 1vh 10vw;
+    padding: 1vh 10vw;
+    /* padding: 1vh 0 1vh 10vw; */
     font-family: 'Montserrat', sans-serif;
     z-index: 9999;
     position: fixed;
@@ -40,38 +41,30 @@
     align-items: center;
     /* list-style: none; */
     gap: 3rem;
-    margin-right: 10vw;
 }
 
-.navLink {
-    letter-spacing: .3rem;
-    text-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
-    /* changelog-start */
-    background: transparent;
-    border: none;
-    width: 8vw;
-    font-size: 1.6rem;
-    /* color: antiquewhite; */
-    /* changelog-end */
-}
-
+.navLink,
 .navActive {
     display: flex;
     align-items: center;
     justify-content: center;
-    /* changelog-start */
-    border: none;
-    font-size: 1.6rem;
-    /* color: antiquewhite; */
-    /* changelog-end */
     width: 8vw;
+    letter-spacing: 0.3rem;
+    text-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navLink {
+    background: transparent;
+    box-shadow: none;
+}
+
+.navActive {
     height: 5vh;
     border-radius: 1.2rem;
-    letter-spacing: .3rem;
-    text-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
     background: linear-gradient(145deg, #323232, #3c3b3b);
     box-shadow: 1.2rem 1.2rem 2.4rem #272727,
-        -1.2rem -1.2rem 2.4rem #494848;
+                -1.2rem -1.2rem 2.4rem #494848;
 }
 
 .navMobileLinks {
@@ -82,8 +75,6 @@
     justify-content: center;
     width: 50vw;
     height: 10vh;
-    /* margin-right: 0; */
-    border: none;
     border-radius: 1.2rem;
     letter-spacing: .3rem;
     text-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
@@ -149,7 +140,7 @@ and (max-width: 1000px) {
 
 @media screen
 and (orientation: landscape)
-and (maxwidth: 800px) and (min-width: 500px) {
+and (max-width: 800px) and (min-width: 500px) {
     .header h1 {
         font-size: 1.6rem;
     }

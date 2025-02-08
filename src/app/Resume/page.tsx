@@ -1,3 +1,5 @@
+'use client';
+
 const Resume = () => {
     console.log('Resume');
 
