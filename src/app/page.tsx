@@ -52,7 +52,6 @@ const Home = () => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
       style={{ height: '100vh', width: '100vw'}}
-      className='section'
     >
       {/* <section id='home' style={{ height: '100vh', width: '100vw'}}> */}
       {/* // changelog-end */}
