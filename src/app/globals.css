@@ -61,6 +61,17 @@ button {
   width: 100vw;
 }
 
+.scrollContainer {
+  scroll-snap-type: y mandatory;
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+.section {
+  scroll-snap-align: start;
+  height: 100vh; /* Each section fills the viewport */
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

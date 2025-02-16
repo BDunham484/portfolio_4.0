@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
+import { useActiveSection } from '../../../context/ActiveSectionContext';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -17,6 +18,7 @@ const Header = () => {
         hamburger,
     } = styles;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+    const { activeSection } = useActiveSection();
     const pathname = usePathname();
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -54,7 +56,13 @@ const Header = () => {
                 <ul>
                     {links.map(({ href, label }) => (
                         <li key={href}>
-                            <Link href={href} className={pathname === href ? navActive : navLink}>
+                            <Link
+                                href={href}
+                                // changelog-start
+                                className={activeSection === label ? navActive : navLink}
+                                // className={pathname === href ? navActive : navLink}
+                                // changelog-end
+                            >
                                 {label}
                             </Link>
                         </li>

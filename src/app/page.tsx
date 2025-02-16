@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
+import { useActiveSection } from '../context/ActiveSectionContext';
+import { useSectionInView } from '../hooks/useSectionInView';
 import useWindowSize from '../hooks/useWindowSize';
 import styles from './page.module.css';
 
@@ -10,6 +12,8 @@ const Home = () => {
   const [lowerValue, setLowerValue] = useState<number>(0);
   const MotionImage = motion(Image);
   const baseTriangleRef = useRef<HTMLDivElement | null>(null);
+  const { ref, inView } = useSectionInView(0.6);
+  const { setActiveSection } = useActiveSection();
   const { width, height } = useWindowSize();
   const ratio = width / height;
 
@@ -26,6 +30,12 @@ const Home = () => {
   } = styles;
 
   useEffect(() => {
+    if (inView) {
+      setActiveSection('Home');
+    }
+  }, [inView, setActiveSection]);
+
+  useEffect(() => {
     if (baseTriangleRef.current) {
       const { height } = baseTriangleRef.current.getBoundingClientRect();
       setUpperValue((height * .15));
@@ -34,7 +44,18 @@ const Home = () => {
   }, [baseTriangleRef, upperValue, lowerValue]);
 
   return (
-    <section id='home' style={{ height: '100vh', width: '100vw'}}>
+    // changelog-start
+    <motion.section
+      ref={ref}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      style={{ height: '100vh', width: '100vw'}}
+      className='section'
+    >
+      {/* <section id='home' style={{ height: '100vh', width: '100vw'}}> */}
+      {/* // changelog-end */}
       <div className={heroImagesContainer}>
         <div className={triangleWrapper} ref={baseTriangleRef}>
           <MotionImage
@@ -56,14 +77,8 @@ const Home = () => {
             className={upperTriangle}
             src='/assets/images/antique-white-triangle.png'
             alt='clear triangle with a thin golden border pointing down'
-            initial={{
-              opacity: 0,
-              y: -100,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 2, delay: 1.2 }}
             priority
             fill
@@ -77,14 +92,8 @@ const Home = () => {
             className={lowerTriangle}
             src='/assets/images/antique-white-triangle.png'
             alt='clear triangle with a thin golden border pointing down'
-            initial={{
-              opacity: 0,
-              y: -100,
-            }}
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 2, delay: 1.5 }}
             priority
             fill
@@ -103,7 +112,7 @@ const Home = () => {
           />
         </div>
       </div>
-    </section>
+    </motion.section>
   );
 };
 

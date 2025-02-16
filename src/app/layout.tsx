@@ -30,7 +30,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} global-bg`}>
         <ActiveSectionProvider>
           <Header />
-          {children}
+          <div className='scrollContainer'>
+            {children}
+          </div>
         </ActiveSectionProvider>
       </body>
     </html>

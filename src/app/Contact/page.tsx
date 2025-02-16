@@ -1,18 +1,37 @@
 'use client';
+import { motion } from 'framer-motion';
+import { useEffect } from 'react';
+import { useActiveSection } from '../../context/ActiveSectionContext';
+import { useSectionInView } from '../../hooks/useSectionInView';
 
 const Contact = () => {
-    console.log('Contact');
+    const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
+    const { setActiveSection } = useActiveSection();
+
+    useEffect(() => {
+        if (inView) {
+            setActiveSection('Contact');
+        }
+    }, [inView, setActiveSection]);
 
     return (
-        <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '100%',
-            height: '100vh',
-        }}>
+        <motion.section
+            ref={ref}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className='section'
+            style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+                height: '100vh',
+            }}
+        >
             Contact
-        </div>
+        </motion.section>
     );
 };
 
