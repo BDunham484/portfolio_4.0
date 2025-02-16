@@ -1,10 +1,14 @@
 'use client';
+// import styles from './About.module.css';
 
 const About = () => {
+    // const { background } = styles;
     console.log('About');
 
     return (
-        <div style={{
+        <div
+        // className={background}
+        style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

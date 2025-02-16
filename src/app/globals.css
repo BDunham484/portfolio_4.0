@@ -53,6 +53,14 @@ button {
   color: antiquewhite;
 }
 
+.global-bg {
+  background-image: url('/assets/images/hamish-weir-cuO6_mnbgPE-unsplash.jpg');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  width: 100vw;
+}
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

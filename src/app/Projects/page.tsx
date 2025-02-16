@@ -1,10 +1,14 @@
 'use client';
+// import styles from './Project.module.css';
 
 const Projects = () => {
+    // const { background } = styles;
     console.log('Projects');
 
     return (
-        <div style={{
+        <div
+        // className={background}
+        style={{
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',

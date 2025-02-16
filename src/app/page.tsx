@@ -34,7 +34,7 @@ const Home = () => {
   }, [baseTriangleRef, upperValue, lowerValue]);
 
   return (
-    <section id='home' className={hero}>
+    <section id='home' style={{ height: '100vh', width: '100vw'}}>
       <div className={heroImagesContainer}>
         <div className={triangleWrapper} ref={baseTriangleRef}>
           <MotionImage
