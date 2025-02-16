@@ -18,7 +18,11 @@ const Header = () => {
         hamburger,
     } = styles;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const { activeSection } = useActiveSection();
+    const {
+        activeSection,
+        setActiveSection,
+        setActiveIndex,
+    } = useActiveSection();
     const pathname = usePathname();
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -54,10 +58,14 @@ const Header = () => {
             </div>
             <nav className={nav}>
                 <ul>
-                    {links.map(({ href, label }) => (
+                    {links.map(({ href, label }, index) => (
                         <li key={href}>
                             <Link
                                 href={href}
+                                onClick={() => {
+                                    setActiveSection(label);
+                                    setActiveIndex(index + 1);
+                                }}
                                 // changelog-start
                                 className={activeSection === label ? navActive : navLink}
                                 // className={pathname === href ? navActive : navLink}
@@ -79,7 +87,7 @@ const Header = () => {
                 </button>
                 {isMenuOpen &&
                     <ul>
-                        {mobileLinks.map(({ href, label, delay }) => (
+                        {mobileLinks.map(({ href, label, delay }, index) => (
                             <motion.li
                                 key={href}
                                 initial={animateFrom}
