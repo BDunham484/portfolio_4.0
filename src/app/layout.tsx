@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Header from './Components/Header/Header';
 import './globals.css';
+import { ActiveSectionProvider } from '../context/ActiveSectionContext';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -27,8 +28,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable} global-bg`}>
-        <Header />
-        {children}
+        <ActiveSectionProvider>
+          <Header />
+          {children}
+        </ActiveSectionProvider>
       </body>
     </html>
   );
