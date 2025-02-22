@@ -48,7 +48,13 @@ const Header = () => {
         <header className={header}>
             <div onClick={closeMobileMenu}>
                 <h1>
-                    <Link href='/'>
+                    <Link
+                        href='/'
+                        onClick={() => {
+                            setActiveSection('/');
+                            setActiveIndex(0);
+                        }}
+                        >
                         Brad Dunham
                     </Link>
                 </h1>
