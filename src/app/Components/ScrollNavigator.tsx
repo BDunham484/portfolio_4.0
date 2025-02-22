@@ -3,7 +3,7 @@
 
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { useActiveSection } from '../../../context/ActiveSectionContext';
+import { useActiveSection } from '../../context/ActiveSectionContext';
 
 const routes = ['/', '/About', '/Projects', '/Resume', '/Contact']; // adjust these to match your routes
 

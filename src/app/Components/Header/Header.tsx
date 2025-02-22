@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
 import { useActiveSection } from '../../../context/ActiveSectionContext';
+import DelayedLink from '../DelayedLink';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -44,19 +45,33 @@ const Header = () => {
         { href: '/Contact', label: 'Contact', delay: 0.30 },
     ];
 
+    const onLinkClick = useCallback((label: string, index: number) => {
+        setActiveSection(label);
+        setActiveIndex(index);
+    }, [setActiveIndex, setActiveSection]);
+
     return (
         <header className={header}>
             <div onClick={closeMobileMenu}>
                 <h1>
-                    <Link
+                    {/* <Link
                         href='/'
-                        onClick={() => {
-                            setActiveSection('/');
-                            setActiveIndex(0);
-                        }}
+                        onClick={() => onLinkClick('/', 0)}
+                        // onClick={() => {
+                        //     setActiveSection('/');
+                        //     setActiveIndex(0);
+                        // }}
                         >
                         Brad Dunham
-                    </Link>
+                    </Link> */}
+                    <DelayedLink
+                        href='/'
+                        index={0}
+                        label='/'
+                        onClick={onLinkClick}
+                    >
+                        Brad Dunham
+                    </DelayedLink>
                 </h1>
                 <p>
                     Developer
@@ -66,19 +81,31 @@ const Header = () => {
                 <ul>
                     {links.map(({ href, label }, index) => (
                         <li key={href + index}>
-                            <Link
+                            {/* // changelog-start */}
+                            <DelayedLink
                                 href={href}
-                                onClick={() => {
-                                    setActiveSection(label);
-                                    setActiveIndex(index + 1);
-                                }}
-                                // changelog-start
+                                index={index + 1}
+                                label={label}
+                                onClick={onLinkClick}
                                 className={activeSection === label ? navActive : navLink}
-                                // className={pathname === href ? navActive : navLink}
-                                // changelog-end
                             >
                                 {label}
-                            </Link>
+                            </DelayedLink>
+                            {/* <Link
+                                href={href}
+                                onClick={() => onLinkClick(label, index + 1)}
+                                // onClick={() => {
+                                //     setActiveSection(label);
+                                //     setActiveIndex(index + 1);
+                                // }}
+                                // changelog-start
+                                className={activeSection === label ? navActive : navLink}
+                            // className={pathname === href ? navActive : navLink}
+                            // changelog-end
+                            >
+                                {label}
+                            </Link> */}
+                            {/* // chagnelog-end */}
                         </li>
                     ))}
                 </ul>
