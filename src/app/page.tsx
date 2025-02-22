@@ -1,5 +1,5 @@
 'use client';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { useActiveSection } from '../context/ActiveSectionContext';
@@ -18,8 +18,8 @@ const Home = () => {
   const ratio = width / height;
 
   const {
-    hero,
-    heroImagesContainer,
+    // hero,
+    imageContainer,
     triangleWrapper,
     upperTriangleWrapper,
     lowerTriangleWrapper,
@@ -44,60 +44,65 @@ const Home = () => {
   }, [baseTriangleRef, upperValue, lowerValue]);
 
   return (
-    // changelog-start
     <motion.section
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      style={{ height: '100vh', width: '100vw'}}
+      style={{ height: '100vh', width: '100vw' }}
     >
-      {/* <section id='home' style={{ height: '100vh', width: '100vw'}}> */}
-      {/* // changelog-end */}
-      <div className={heroImagesContainer}>
-        <div className={triangleWrapper} ref={baseTriangleRef}>
-          <MotionImage
-            className={baseTriangle}
-            src='/assets/images/textured-triangle.png'
-            alt='large dark triangle with golden border'
-            priority
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            fill
-          />
-        </div>
-        <div
-          className={upperTriangleWrapper}
-          style={{ top: `calc(50% + ${upperValue}px)` }}
-        >
-          <MotionImage
-            className={upperTriangle}
-            src='/assets/images/antique-white-triangle.png'
-            alt='clear triangle with a thin golden border pointing down'
-            initial={{ opacity: 0, y: -100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 2, delay: 1.2 }}
-            priority
-            fill
-          />
-        </div>
-        <div
-          className={lowerTriangleWrapper}
-          style={{ top: `calc(50% + ${lowerValue}px)` }}
-        >
-          <MotionImage
-            className={lowerTriangle}
-            src='/assets/images/antique-white-triangle.png'
-            alt='clear triangle with a thin golden border pointing down'
-            initial={{ opacity: 0, y: -100 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 2, delay: 1.5 }}
-            priority
-            fill
-          />
-        </div>
+      <div className={imageContainer}>
+        <AnimatePresence mode='wait'>
+          <div className={triangleWrapper} ref={baseTriangleRef}>
+            <MotionImage
+              key='baseTriangle'
+              className={baseTriangle}
+              src='/assets/images/textured-triangle.png'
+              alt='large dark triangle with golden border'
+              priority
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              fill
+            />
+          </div>
+          <div
+            className={upperTriangleWrapper}
+            style={{ top: `calc(50% + ${upperValue}px)` }}
+          >
+            <MotionImage
+              key='upperTriangle'
+              className={upperTriangle}
+              src='/assets/images/antique-white-triangle.png'
+              alt='clear triangle with a thin golden border pointing down'
+              initial={{ opacity: 0, y: -100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -100 }}
+              transition={{ duration: 2, delay: 1.2 }}
+              priority
+              fill
+            />
+          </div>
+          <div
+            className={lowerTriangleWrapper}
+            style={{ top: `calc(50% + ${lowerValue}px)` }}
+          >
+            <MotionImage
+              key='lowerTriangle'
+              className={lowerTriangle}
+              src='/assets/images/antique-white-triangle.png'
+              alt='clear triangle with a thin golden border pointing down'
+              initial={{ opacity: 0, y: -100 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -100 }}
+              transition={{ duration: 2, delay: 1.5 }}
+              priority
+              fill
+            />
+          </div>
+        </AnimatePresence>
         <div className={cometWrapper}>
           <MotionImage
             src="https://www.freeiconspng.com/thumbs/comet/comet-transparent-background-image-11.png"

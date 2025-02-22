@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+// import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
 import { useActiveSection } from '../../../context/ActiveSectionContext';
@@ -23,7 +23,7 @@ const Header = () => {
         setActiveSection,
         setActiveIndex,
     } = useActiveSection();
-    const pathname = usePathname();
+    // const pathname = usePathname();
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -65,7 +65,7 @@ const Header = () => {
             <nav className={nav}>
                 <ul>
                     {links.map(({ href, label }, index) => (
-                        <li key={href}>
+                        <li key={href + index}>
                             <Link
                                 href={href}
                                 onClick={() => {
