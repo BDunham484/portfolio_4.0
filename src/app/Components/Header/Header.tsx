@@ -1,10 +1,14 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
 import { useActiveSection } from '../../../context/ActiveSectionContext';
+import ScrollNavigator from '../ScrollNavigator';
 import styles from './Header.module.css';
+
+const routes = ['/', '/About', '/Projects', '/Resume', '/Contact'];
 
 const Header = () => {
     const {
@@ -16,9 +20,12 @@ const Header = () => {
         nav,
         hamburger,
     } = styles;
+    const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const { activeSection, setActiveSection } = useActiveSection();
-    // const pathname = usePathname();
+    const [activeLink, setActiveLink] = useState<string>('');
+    const initialIndex = routes.findIndex((r) => r === pathname) || 0;
+    const [activeIndex, setActiveIndex] = useState<number>(initialIndex);
+    const { activeSectionRef } = useActiveSection();
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -39,22 +46,17 @@ const Header = () => {
         { href: '/Contact', label: 'Contact', delay: 0.30 },
     ];
 
-    // const onLinkClick = useCallback((label: string, index: number) => {
-    //     setActiveSection(label);
-    //     setActiveIndex(index);
-    // }, [setActiveIndex, setActiveSection]);
-
-    // changelog-start
-    console.log('🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌 Header.tsx: ');
-    console.log('🌌🌌🌌🌌 activeSection: ', activeSection);
-    console.log(' ');
-    // changelog=end
+    const onLinkClick = useCallback((label: string, index: number) => {
+        activeSectionRef.current = label;
+        setActiveLink(label);
+        setActiveIndex(index);
+    }, [activeSectionRef]);
 
     return (
         <header className={header}>
             <div onClick={closeMobileMenu}>
                 <h1>
-                    <Link href='/' onClick={() => setActiveSection('/')}>
+                    <Link href='/' onClick={() => onLinkClick('/', 0)}>
                         Brad Dunham
                     </Link>
                 </h1>
@@ -64,15 +66,12 @@ const Header = () => {
             </div>
             <nav className={nav}>
                 <ul>
-                    {links.map(({ href, label }) => (
+                    {links.map(({ href, label }, index) => (
                         <li key={href}>
                             <Link
                                 href={href}
-                                onClick={() => setActiveSection(label)}
-                                // changelog-start
-                                className={activeSection === label ? navActive : navLink}
-                            // className={pathname === href ? navActive : navLink}
-                            // changelog-end
+                                onClick={() => onLinkClick(label, index + 1)}
+                                className={activeLink === label ? navActive : navLink}
                             >
                                 {label}
                             </Link>
@@ -106,6 +105,13 @@ const Header = () => {
                     </ul>
                 }
             </nav >
+            <ScrollNavigator
+                routes={routes}
+                pathname={pathname}
+                activeIndex={activeIndex}
+                setActiveIndex={setActiveIndex}
+                setActiveLink={setActiveLink}
+            />
         </header>
     );
 };

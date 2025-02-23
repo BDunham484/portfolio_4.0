@@ -6,13 +6,13 @@ import { useSectionInView } from '../../hooks/useSectionInView';
 
 const Resume = () => {
     const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
-    const { setActiveSection } = useActiveSection();
+    const { activeSectionRef } = useActiveSection();
 
     useEffect(() => {
         if (inView) {
-            setActiveSection('Resume');
+            activeSectionRef.current = ('Resume');
         }
-    }, [inView, setActiveSection]);
+    }, [inView, activeSectionRef]);
 
     return (
         <motion.section

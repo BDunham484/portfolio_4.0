@@ -1,37 +1,36 @@
-// src/components/ScrollNavigator.tsx
 'use client';
-
-import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import { useActiveSection } from '../../context/ActiveSectionContext';
+import { SetStateAction, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
-const routes = ['/', '/About', '/Projects', '/Resume', '/Contact']; // adjust these to match your routes
+interface IProps {
+    routes: string[];
+    pathname: string;
+    activeIndex: number;
+    setActiveIndex: (value: SetStateAction<number>) => void;
+    setActiveLink: (value: SetStateAction<string>) => void;
+}
 
-export default function ScrollNavigator() {
+export default function ScrollNavigator({
+    routes,
+    pathname,
+    activeIndex,
+    setActiveIndex,
+    setActiveLink,
+}: IProps) {
     const router = useRouter();
-    const pathname = usePathname();
-    const { setActiveSection } = useActiveSection();
-
-    // Determine the starting index from the current pathname.
-    const initialIndex = routes.findIndex((r) => r === pathname) || 0;
-    const [activeIndex, setActiveIndex] = useState(initialIndex);
+    const { activeSectionRef } = useActiveSection();
 
     // A flag to debounce scrolling.
     const isScrollingRef = useRef(false);
 
-    // changelog-start
     useEffect(() => {
-        // changelog-start
-        console.log('🌙🌙🌙🌙🌙🌙🌙🌙🌙🌙🌙🌙🌙🌙 SCROLNAVIGATOR: ');
-        console.log('🌙🌙🌙🌙 routes[activeIndex]: ', routes[activeIndex]);
-        console.log('🌙🌙🌙🌙 routes: ', routes);
-        console.log('🌙🌙🌙🌙 activeIndex: ', activeIndex);
-        console.log('🌙🌙🌙🌙 router: ', router);
-        console.log(' ');
-        // changelog-end
         if (isScrollingRef.current && routes[activeIndex]) {
             // When activeIndex changes, update both the active section context and the route.
-            setActiveSection(routes[activeIndex].replace('/', '') || '/');
+            activeSectionRef.current = (routes[activeIndex].replace('/', '') || '/');
+            if (setActiveLink) {
+                setActiveLink(routes[activeIndex].replace('/', '') || '/');
+            }
             if (routes[activeIndex] !== pathname) {
                 router.push(routes[activeIndex]);
             }
@@ -40,7 +39,9 @@ export default function ScrollNavigator() {
         activeIndex,
         pathname,
         router,
-        setActiveSection,
+        activeSectionRef,
+        setActiveLink,
+        routes,
     ]);
 
     const handleWheel = (e: WheelEvent) => {
@@ -67,5 +68,5 @@ export default function ScrollNavigator() {
         return () => window.removeEventListener('wheel', handleWheel);
     }, [activeIndex]);
 
-    return null; // This component doesn't render anything visible.
+    return null;
 }

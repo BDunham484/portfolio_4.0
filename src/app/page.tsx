@@ -13,12 +13,11 @@ const Home = () => {
   const MotionImage = motion(Image);
   const baseTriangleRef = useRef<HTMLDivElement | null>(null);
   const { ref, inView } = useSectionInView(0.6);
-  const { setActiveSection } = useActiveSection();
+  const { activeSectionRef } = useActiveSection();
   const { width, height } = useWindowSize();
   const ratio = width / height;
 
   const {
-    // hero,
     imageContainer,
     triangleWrapper,
     upperTriangleWrapper,
@@ -31,9 +30,9 @@ const Home = () => {
 
   useEffect(() => {
     if (inView) {
-      setActiveSection('/');
+      activeSectionRef.current = ('/');
     }
-  }, [inView, setActiveSection]);
+  }, [inView, activeSectionRef]);
 
   useEffect(() => {
     if (baseTriangleRef.current) {

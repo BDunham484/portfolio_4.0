@@ -3,18 +3,16 @@ import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import { useActiveSection } from '../../context/ActiveSectionContext';
 import { useSectionInView } from '../../hooks/useSectionInView';
-// import styles from './About.module.css';
 
 const About = () => {
     const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
-    const { setActiveSection } = useActiveSection();
+    const { activeSectionRef } = useActiveSection();
 
     useEffect(() => {
         if (inView) {
-            setActiveSection('About');
+            activeSectionRef.current = ('About');
         }
-    }, [inView, setActiveSection]);
-    // const { background } = styles;
+    }, [inView, activeSectionRef]);
 
     return (
         <motion.section

@@ -7,13 +7,13 @@ import { useSectionInView } from '../../hooks/useSectionInView';
 
 const Projects = () => {
     const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
-    const { setActiveSection } = useActiveSection();
+    const { activeSectionRef } = useActiveSection();
 
     useEffect(() => {
         if (inView) {
-            setActiveSection('Projects');
+            activeSectionRef.current = ('Projects');
         }
-    }, [inView, setActiveSection]);
+    }, [inView, activeSectionRef]);
     // const { background } = styles;
 
     return (

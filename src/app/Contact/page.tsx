@@ -6,13 +6,13 @@ import { useSectionInView } from '../../hooks/useSectionInView';
 
 const Contact = () => {
     const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
-    const { setActiveSection } = useActiveSection();
+    const { activeSectionRef } = useActiveSection();
 
     useEffect(() => {
         if (inView) {
-            setActiveSection('Contact');
+            activeSectionRef.current = ('Contact');
         }
-    }, [inView, setActiveSection]);
+    }, [inView, activeSectionRef]);
 
     return (
         <motion.section
