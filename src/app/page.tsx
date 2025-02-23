@@ -29,7 +29,7 @@ const Home = () => {
     cometWrapper,
   } = styles;
 
-  useEffect(() => { 
+  useEffect(() => {
     if (inView) {
       setActiveSection('/');
     }
@@ -45,6 +45,7 @@ const Home = () => {
 
   return (
     <motion.section
+      key='home-section'
       ref={ref}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -53,53 +54,54 @@ const Home = () => {
       style={{ height: '100vh', width: '100vw' }}
     >
       <div className={imageContainer}>
-          <div className={triangleWrapper} ref={baseTriangleRef}>
-            <MotionImage
-              key='baseTriangle'
-              className={baseTriangle}
-              src='/assets/images/textured-triangle.png'
-              alt='large dark triangle with golden border'
-              priority
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              fill
-            />
-          </div>
-          <div
-            className={upperTriangleWrapper}
-            style={{ top: `calc(50% + ${upperValue}px)` }}
-          >
-            <MotionImage
-              key='upperTriangle'
-              className={upperTriangle}
-              src='/assets/images/antique-white-triangle.png'
-              alt='clear triangle with a thin golden border pointing down'
-              initial={{ opacity: 0, y: -100 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 2, delay: 1.2 }}
-              priority
-              fill
-            />
-          </div>
-          <div
-            className={lowerTriangleWrapper}
-            style={{ top: `calc(50% + ${lowerValue}px)` }}
-          >
-            <MotionImage
-              key='lowerTriangle'
-              className={lowerTriangle}
-              src='/assets/images/antique-white-triangle.png'
-              alt='clear triangle with a thin golden border pointing down'
-              initial={{ opacity: 0, y: -100 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 2, delay: 1.5 }}
-              priority
-              fill
-            />
-          </div>
+        <div className={triangleWrapper} ref={baseTriangleRef}>
+          <MotionImage
+            key='baseTriangle'
+            className={baseTriangle}
+            src='/assets/images/textured-triangle.png'
+            alt='large dark triangle with golden border'
+            priority
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            fill
+          />
+        </div>
+        <div
+          className={upperTriangleWrapper}
+          style={{ top: `calc(50% + ${upperValue}px)` }}
+        >
+          <MotionImage
+            key='upperTriangle'
+            className={upperTriangle}
+            src='/assets/images/antique-white-triangle.png'
+            alt='clear triangle with a thin golden border pointing down'
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 2, delay: 1.2 }}
+            priority
+            fill
+          />
+        </div>
+        <div
+          className={lowerTriangleWrapper}
+          style={{ top: `calc(50% + ${lowerValue}px)` }}
+        >
+          <MotionImage
+            key='lowerTriangle'
+            className={lowerTriangle}
+            src='/assets/images/antique-white-triangle.png'
+            alt='clear triangle with a thin golden border pointing down'
+            initial={{ opacity: 0, y: -100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 2, delay: 1.5 }}
+            priority
+            fill
+          />
+        </div>
         <div className={cometWrapper}>
           <MotionImage
+            key='comet'
             src="https://www.freeiconspng.com/thumbs/comet/comet-transparent-background-image-11.png"
             alt="a comet"
             width={75}
