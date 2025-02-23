@@ -1,23 +1,24 @@
 'use client';
-// src/context/ActiveSectionContext.tsx
 import { createContext, ReactNode, useContext, useState } from 'react';
 
 type ActiveSectionContextType = {
     activeSection: string;
-    activeIndex: number;
     setActiveSection: (section: string) => void;
-    setActiveIndex: (index: number) => void;
 };
 
 const ActiveSectionContext = createContext<ActiveSectionContextType | undefined>(undefined);
 
 export const ActiveSectionProvider = ({ children }: { children: ReactNode }) => {
     const [activeSection, setActiveSection] = useState<string>('');
-    const [activeIndex, setActiveIndex] = useState<number>(0);
+    // changelog-start
+    console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾 ActiveSectionContext: ');
+    console.log('👾👾👾👾 activeSection: ', activeSection);
+    console.log(' ');
+    // changelog-end
 
     return (
         <ActiveSectionContext.Provider
-            value={{ activeSection, activeIndex, setActiveSection, setActiveIndex }}
+            value={{ activeSection, setActiveSection }}
         >
             {children}
         </ActiveSectionContext.Provider>

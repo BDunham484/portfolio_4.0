@@ -1,11 +1,9 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-// import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
 import { useActiveSection } from '../../../context/ActiveSectionContext';
-import DelayedLink from '../DelayedLink';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -19,11 +17,7 @@ const Header = () => {
         hamburger,
     } = styles;
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const {
-        activeSection,
-        setActiveSection,
-        setActiveIndex,
-    } = useActiveSection();
+    const { activeSection, setActiveSection } = useActiveSection();
     // const pathname = usePathname();
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
@@ -45,33 +39,24 @@ const Header = () => {
         { href: '/Contact', label: 'Contact', delay: 0.30 },
     ];
 
-    const onLinkClick = useCallback((label: string, index: number) => {
-        setActiveSection(label);
-        setActiveIndex(index);
-    }, [setActiveIndex, setActiveSection]);
+    // const onLinkClick = useCallback((label: string, index: number) => {
+    //     setActiveSection(label);
+    //     setActiveIndex(index);
+    // }, [setActiveIndex, setActiveSection]);
+
+    // changelog-start
+    console.log('🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌🌌 Header.tsx: ');
+    console.log('🌌🌌🌌🌌 activeSection: ', activeSection);
+    console.log(' ');
+    // changelog=end
 
     return (
         <header className={header}>
             <div onClick={closeMobileMenu}>
                 <h1>
-                    {/* <Link
-                        href='/'
-                        onClick={() => onLinkClick('/', 0)}
-                        // onClick={() => {
-                        //     setActiveSection('/');
-                        //     setActiveIndex(0);
-                        // }}
-                        >
+                    <Link href='/' onClick={() => setActiveSection('/')}>
                         Brad Dunham
-                    </Link> */}
-                    <DelayedLink
-                        href='/'
-                        index={0}
-                        label='/'
-                        onClick={onLinkClick}
-                    >
-                        Brad Dunham
-                    </DelayedLink>
+                    </Link>
                 </h1>
                 <p>
                     Developer
@@ -79,33 +64,18 @@ const Header = () => {
             </div>
             <nav className={nav}>
                 <ul>
-                    {links.map(({ href, label }, index) => (
-                        <li key={href + index}>
-                            {/* // changelog-start */}
-                            <DelayedLink
+                    {links.map(({ href, label }) => (
+                        <li key={href}>
+                            <Link
                                 href={href}
-                                index={index + 1}
-                                label={label}
-                                onClick={onLinkClick}
-                                className={activeSection === label ? navActive : navLink}
-                            >
-                                {label}
-                            </DelayedLink>
-                            {/* <Link
-                                href={href}
-                                onClick={() => onLinkClick(label, index + 1)}
-                                // onClick={() => {
-                                //     setActiveSection(label);
-                                //     setActiveIndex(index + 1);
-                                // }}
+                                onClick={() => setActiveSection(label)}
                                 // changelog-start
                                 className={activeSection === label ? navActive : navLink}
                             // className={pathname === href ? navActive : navLink}
                             // changelog-end
                             >
                                 {label}
-                            </Link> */}
-                            {/* // chagnelog-end */}
+                            </Link>
                         </li>
                     ))}
                 </ul>
@@ -120,7 +90,7 @@ const Header = () => {
                 </button>
                 {isMenuOpen &&
                     <ul>
-                        {mobileLinks.map(({ href, label, delay }, index) => (
+                        {mobileLinks.map(({ href, label, delay }) => (
                             <motion.li
                                 key={href}
                                 initial={animateFrom}
