@@ -4,7 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
-import { useActiveSection } from '../../../context/ActiveSectionContext';
+// changelog-start
+// import { useActiveSection } from '../../../context/ActiveSectionContext';
+// changelog-end
 import ScrollNavigator from '../ScrollNavigator';
 import styles from './Header.module.css';
 
@@ -25,7 +27,9 @@ const Header = () => {
     const [activeLink, setActiveLink] = useState<string>('');
     const initialIndex = routes.findIndex((r) => r === pathname) || 0;
     const [activeIndex, setActiveIndex] = useState<number>(initialIndex);
-    const { activeSectionRef } = useActiveSection();
+    // changelog-start
+    // const { activeSectionRef } = useActiveSection();
+    // chagnelog-end
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -47,10 +51,12 @@ const Header = () => {
     ];
 
     const onLinkClick = useCallback((label: string, index: number) => {
-        activeSectionRef.current = label;
+        // changelog-start
+        // activeSectionRef.current = label;
+        // chagnelog-end
         setActiveLink(label);
         setActiveIndex(index);
-    }, [activeSectionRef]);
+    }, []);
 
     return (
         <header className={header}>

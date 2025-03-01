@@ -1,19 +1,19 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
-import { useActiveSection } from '../../context/ActiveSectionContext';
+// import { useEffect } from 'react';
+// import { useActiveSection } from '../../context/ActiveSectionContext';
 import { useSectionInView } from '../../hooks/useSectionInView';
 // import styles from './Project.module.css';
 
 const Projects = () => {
     const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
-    const { activeSectionRef } = useActiveSection();
+    // const { activeSectionRef } = useActiveSection();
 
-    useEffect(() => {
-        if (inView) {
-            activeSectionRef.current = ('Projects');
-        }
-    }, [inView, activeSectionRef]);
+    // useEffect(() => {
+    //     if (inView) {
+    //         activeSectionRef.current = ('Projects');
+    //     }
+    // }, [inView, activeSectionRef]);
     // const { background } = styles;
 
     return (

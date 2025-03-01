@@ -1,5 +1,7 @@
 'use client';
-import { useActiveSection } from '../../context/ActiveSectionContext';
+// changelog-start
+// import { useActiveSection } from '../../context/ActiveSectionContext';
+// changelog-end
 import { SetStateAction, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -19,7 +21,9 @@ export default function ScrollNavigator({
     setActiveLink,
 }: IProps) {
     const router = useRouter();
-    const { activeSectionRef } = useActiveSection();
+    // changelog-start
+    // const { activeSectionRef } = useActiveSection();
+    // changelog-end
 
     // A flag to debounce scrolling.
     const isScrollingRef = useRef(false);
@@ -27,7 +31,9 @@ export default function ScrollNavigator({
     useEffect(() => {
         if (isScrollingRef.current && routes[activeIndex]) {
             // When activeIndex changes, update both the active section context and the route.
-            activeSectionRef.current = (routes[activeIndex].replace('/', '') || '/');
+            // changelog-start
+            // activeSectionRef.current = (routes[activeIndex].replace('/', '') || '/');
+            // changelog-end
             if (setActiveLink) {
                 setActiveLink(routes[activeIndex].replace('/', '') || '/');
             }
@@ -39,7 +45,9 @@ export default function ScrollNavigator({
         activeIndex,
         pathname,
         router,
-        activeSectionRef,
+        // changelog-start
+        // activeSectionRef,
+        // changelog-end
         setActiveLink,
         routes,
     ]);

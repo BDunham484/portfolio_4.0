@@ -1,18 +1,18 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
-import { useActiveSection } from '../../context/ActiveSectionContext';
+// import { useEffect } from 'react';
+// import { useActiveSection } from '../../context/ActiveSectionContext';
 import { useSectionInView } from '../../hooks/useSectionInView';
 
 const Resume = () => {
     const { ref, inView } = useSectionInView(0.6); // adjust threshold as needed
-    const { activeSectionRef } = useActiveSection();
+    // const { activeSectionRef } = useActiveSection();
 
-    useEffect(() => {
-        if (inView) {
-            activeSectionRef.current = ('Resume');
-        }
-    }, [inView, activeSectionRef]);
+    // useEffect(() => {
+    //     if (inView) {
+    //         activeSectionRef.current = ('Resume');
+    //     }
+    // }, [inView, activeSectionRef]);
 
     return (
         <motion.section
