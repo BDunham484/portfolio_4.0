@@ -7,6 +7,7 @@ const Resume = () => {
 
     return (
         <motion.section
+            key='Resume'
             ref={ref}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

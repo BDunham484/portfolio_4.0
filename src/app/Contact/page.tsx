@@ -7,6 +7,7 @@ const Contact = () => {
 
     return (
         <motion.section
+            key='Contact'
             ref={ref}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

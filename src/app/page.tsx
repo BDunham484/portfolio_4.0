@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useSectionInView } from '../hooks/useSectionInView';
 import useWindowSize from '../hooks/useWindowSize';
 import styles from './page.module.css';
+import { usePathname } from 'next/navigation';
 
 const Home = () => {
   const [upperValue, setUpperValue] = useState<number>(0);
@@ -14,6 +15,7 @@ const Home = () => {
   const { ref, inView } = useSectionInView(0.6);
   const { width, height } = useWindowSize();
   const ratio = width / height;
+  const pathname = usePathname();
 
   const {
     imageContainer,
@@ -37,7 +39,7 @@ const Home = () => {
   return (
     <AnimatePresence mode='wait'>
       <motion.section
-        key='home-section'
+        key={`${pathname}-home`}
         ref={ref}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -49,7 +51,7 @@ const Home = () => {
         <div className={imageContainer}>
           <div className={triangleWrapper} ref={baseTriangleRef}>
             <MotionImage
-              key='baseTriangle'
+              key={`${pathname}-baseTriangle`}
               className={baseTriangle}
               src='/assets/images/textured-triangle.png'
               alt='large dark triangle with golden border'
@@ -65,7 +67,7 @@ const Home = () => {
             style={{ top: `calc(50% + ${upperValue}px)` }}
           >
             <MotionImage
-              key='upperTriangle'
+              key={`${pathname}-upperTriangle`}
               className={upperTriangle}
               src='/assets/images/antique-white-triangle.png'
               alt='clear triangle with a thin golden border pointing down'
@@ -81,7 +83,7 @@ const Home = () => {
             style={{ top: `calc(50% + ${lowerValue}px)` }}
           >
             <MotionImage
-              key='lowerTriangle'
+              key={`${pathname}-lowerTriangle`}
               className={lowerTriangle}
               src='/assets/images/antique-white-triangle.png'
               alt='clear triangle with a thin golden border pointing down'
@@ -94,7 +96,7 @@ const Home = () => {
           </div>
           <div className={cometWrapper}>
             <MotionImage
-              key='comet'
+              key={`${pathname}-comet`}
               src="https://www.freeiconspng.com/thumbs/comet/comet-transparent-background-image-11.png"
               alt="a comet"
               width={75}

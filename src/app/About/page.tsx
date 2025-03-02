@@ -7,6 +7,7 @@ const About = () => {
 
     return (
         <motion.section
+            key='About'
             ref={ref}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
