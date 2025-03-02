@@ -5,6 +5,7 @@ import { ActiveSectionProvider } from '../context/ActiveSectionContext';
 import Header from './Components/Header/Header';
 // import ScrollNavigator from './Components/ScrollNavigator';
 import './globals.css';
+import { AnimatePresence } from 'framer-motion';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -31,7 +32,9 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} global-bg`}>
         <ActiveSectionProvider>
           <Header />
-          {children}
+          <AnimatePresence mode='wait' initial={false}>
+            {children}
+          </AnimatePresence>
           {/* <ScrollNavigator /> */}
         </ActiveSectionProvider>
       </body>
