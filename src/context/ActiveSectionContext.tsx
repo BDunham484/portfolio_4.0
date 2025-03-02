@@ -1,30 +1,21 @@
 'use client';
-import { createContext, ReactNode, RefObject, SetStateAction, useCallback, useContext, useRef } from 'react';
+import { createContext, ReactNode, RefObject, useContext, useRef, useState } from 'react';
 
 type ActiveSectionContextType = {
-    // activeSection: string;
-    // setActiveSection: (section: string) => void;
     activeSectionRef: RefObject<string>;
+    activeSection: string;
+    setActiveSection: (value: string) => void;
 };
 
 const ActiveSectionContext = createContext<ActiveSectionContextType | undefined>(undefined);
 
 export const ActiveSectionProvider = ({ children }: { children: ReactNode }) => {
-    // const [activeSection, setActiveSection] = useState<string>('');
+    const [activeSection, setActiveSection] = useState('');
     const activeSectionRef = useRef('');
-    // changelog-start
-    console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾 ActiveSectionContext: ');
-    // console.log('👾👾👾👾 activeSection: ', activeSection);
-    console.log('👾👾👾👾 activeSectionRef: ', activeSectionRef.current);
-    console.log(' ');
-    // changelog-end
 
     return (
         <ActiveSectionContext.Provider
-        // changelog-start
-            value={{ activeSectionRef }}
-            // value={{ activeSection, setActiveSection }}
-            // changelog-end
+            value={{ activeSectionRef, activeSection, setActiveSection }}
         >
             {children}
         </ActiveSectionContext.Provider>

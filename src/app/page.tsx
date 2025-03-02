@@ -2,9 +2,6 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-// changelog-start
-// import { useActiveSection } from '../context/ActiveSectionContext';
-// chagngelog-end
 import { useSectionInView } from '../hooks/useSectionInView';
 import useWindowSize from '../hooks/useWindowSize';
 import styles from './page.module.css';
@@ -15,9 +12,6 @@ const Home = () => {
   const MotionImage = motion(Image);
   const baseTriangleRef = useRef<HTMLDivElement | null>(null);
   const { ref, inView } = useSectionInView(0.6);
-  // changelog-start
-  // const { activeSectionRef } = useActiveSection();
-  // changelog-end
   const { width, height } = useWindowSize();
   const ratio = width / height;
 
@@ -31,14 +25,6 @@ const Home = () => {
     lowerTriangle,
     cometWrapper,
   } = styles;
-
-  // changelog-start
-  // useEffect(() => {
-  //   if (inView) {
-  //     activeSectionRef.current = ('/');
-  //   }
-  // }, [inView, activeSectionRef]);
-  // changelog-end
 
   useEffect(() => {
     if (baseTriangleRef.current) {

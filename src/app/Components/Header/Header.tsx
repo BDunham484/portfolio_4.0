@@ -4,9 +4,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
-// changelog-start
-// import { useActiveSection } from '../../../context/ActiveSectionContext';
-// changelog-end
 import ScrollNavigator from '../ScrollNavigator';
 import styles from './Header.module.css';
 
@@ -24,12 +21,8 @@ const Header = () => {
     } = styles;
     const pathname = usePathname();
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-    const [activeLink, setActiveLink] = useState<string>('');
     const initialIndex = routes.findIndex((r) => r === pathname) || 0;
     const [activeIndex, setActiveIndex] = useState<number>(initialIndex);
-    // changelog-start
-    // const { activeSectionRef } = useActiveSection();
-    // chagnelog-end
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -51,10 +44,6 @@ const Header = () => {
     ];
 
     const onLinkClick = useCallback((label: string, index: number) => {
-        // changelog-start
-        // activeSectionRef.current = label;
-        // chagnelog-end
-        setActiveLink(label);
         setActiveIndex(index);
     }, []);
 
@@ -77,7 +66,7 @@ const Header = () => {
                             <Link
                                 href={href}
                                 onClick={() => onLinkClick(label, index + 1)}
-                                className={activeLink === label ? navActive : navLink}
+                                className={activeIndex === (index + 1) ? navActive : navLink}
                             >
                                 {label}
                             </Link>
@@ -116,7 +105,6 @@ const Header = () => {
                 pathname={pathname}
                 activeIndex={activeIndex}
                 setActiveIndex={setActiveIndex}
-                setActiveLink={setActiveLink}
             />
         </header>
     );
