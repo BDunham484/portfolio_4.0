@@ -23,7 +23,10 @@ export default function ScrollNavigator({
     useEffect(() => {
         if (isScrollingRef.current && routes[activeIndex]) {
             if (routes[activeIndex] !== pathname) {
+                // changelog-start
                 router.push(routes[activeIndex]);
+                // setTimeout(() => router.push(routes[activeIndex] ?? '/'), 5000);
+                // changelog-end
             }
         }
     }, [

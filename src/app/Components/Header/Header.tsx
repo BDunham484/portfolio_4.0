@@ -1,7 +1,7 @@
 'use client';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 import { VscChromeClose, VscMenu } from 'react-icons/vsc';
 import ScrollNavigator from '../ScrollNavigator';
@@ -23,6 +23,7 @@ const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const initialIndex = routes.findIndex((r) => r === pathname) || 0;
     const [activeIndex, setActiveIndex] = useState<number>(initialIndex);
+    const router = useRouter();
 
     const closeMobileMenu = useCallback(() => setIsMenuOpen(false), []);
 
@@ -43,14 +44,29 @@ const Header = () => {
         { href: '/Contact', label: 'Contact', delay: 0.30 },
     ];
 
+    // const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+    
+    // changelog-start
+    // const onLinkClick = useCallback(async (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>, href: string, index: number) => {
+    //     e.preventDefault();
+
+    //     await sleep(2000);
+
+    //     router.push(href);
+    //     setActiveIndex(index);
+
+    //     await sleep(2000);
+    // }, [router]);
     const onLinkClick = useCallback((label: string, index: number) => {
         setActiveIndex(index);
     }, []);
+    // changelog=end
 
     return (
         <header className={header}>
             <div onClick={closeMobileMenu}>
                 <h1>
+                    {/* <Link href='/' onClick={(e) => onLinkClick(e, '/', 0)}> */}
                     <Link href='/' onClick={() => onLinkClick('/', 0)}>
                         Brad Dunham
                     </Link>
@@ -65,7 +81,8 @@ const Header = () => {
                         <li key={href}>
                             <Link
                                 href={href}
-                                onClick={() => onLinkClick(label, index + 1)}
+                                // onClick={(e) => onLinkClick(e, href, index + 1)}
+                                onClick={() => onLinkClick(href, index + 1)}
                                 className={activeIndex === (index + 1) ? navActive : navLink}
                             >
                                 {label}

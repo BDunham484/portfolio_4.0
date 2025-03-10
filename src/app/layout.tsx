@@ -1,11 +1,8 @@
 import type { Metadata } from 'next';
 // eslint-disable-next-line camelcase
 import { Geist, Geist_Mono } from 'next/font/google';
-import { ActiveSectionProvider } from '../context/ActiveSectionContext';
 import Header from './Components/Header/Header';
-// import ScrollNavigator from './Components/ScrollNavigator';
 import './globals.css';
-// import { AnimatePresence } from 'framer-motion';
 import FramerMotionWrapper from './Components/FramerMotionWrapper';
 
 const geistSans = Geist({
@@ -31,13 +28,10 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${geistSans.variable} ${geistMono.variable} global-bg`}>
-        <ActiveSectionProvider>
-          <Header />
-          <FramerMotionWrapper>
-            {children}
-          </FramerMotionWrapper>
-          {/* <ScrollNavigator /> */}
-        </ActiveSectionProvider>
+        <Header />
+        <FramerMotionWrapper>
+          {children}
+        </FramerMotionWrapper>
       </body>
     </html>
   );
