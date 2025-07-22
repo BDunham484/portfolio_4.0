@@ -3,7 +3,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 1vh 10vw;
-    /* padding: 1vh 0 1vh 10vw; */
     font-family: 'Montserrat', sans-serif;
     z-index: 9999;
     position: fixed;
@@ -15,9 +14,7 @@
 }
 
 .header:hover {
-    /* opacity: .50; */
     background-color: rgba(56, 55, 55, .7);
-    /* background-color: #383737; */
 }
 
 .header div {
@@ -28,10 +25,13 @@
 
 .header h1 {
     font-size: 2.2rem;
+    font-weight: 400;
+    letter-spacing: .9rem;
 }
 
 .header div p {
     font-size: 1rem;
+    font-weight: 100;
 }
 
 .mobileNav {
@@ -46,7 +46,6 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    /* list-style: none; */
     gap: 3rem;
 }
 
@@ -56,9 +55,10 @@
     align-items: center;
     justify-content: center;
     width: 8vw;
-    letter-spacing: 0.3rem;
+    letter-spacing: 0.4rem;
     text-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
     transition: background-color 0.5s ease, box-shadow 0.5s ease;
+    font-weight: 100;
 }
 
 .navLink {
@@ -69,7 +69,7 @@
 .navActive {
     height: 5vh;
     border-radius: 1.2rem;
-    letter-spacing: 0.3rem;
+    letter-spacing: 0.4rem;
     /* text-shadow: 0 0 1rem rgba(0, 0, 0, 0.5); */
     background: linear-gradient(145deg, rgba(2, 4, 7, 0.7), #323639);
     box-shadow: 1.2rem 1.2rem 2.4rem #0c1113, -1.2rem -1.2rem 2.4rem #343839;
@@ -81,26 +81,6 @@
     background: linear-gradient(145deg, #323232, #3c3b3b);
     box-shadow: 1.2rem 1.2rem 2.4rem #272727, -1.2rem -1.2rem 2.4rem #494848;
 }
-
-/* // changelog-start */
-/*  These are the styles I would like to use when the a link is active but the header is not being hovered on. */
-/* .navActive {
-    height: 5vh;
-    border-radius: 1.2rem;
-    background: linear-gradient(145deg, rgba(2, 4, 7, 0.7), #323639);
-    box-shadow: 1.2rem 1.2rem 2.4rem #0C1113,
-        -1.2rem -1.2rem 2.4rem #343839;
-} */
-
-/*  These are the styles for when a link is active and the header is being hovered on */
-/* .navActive {
-    height: 5vh;
-    border-radius: 1.2rem;
-    background: linear-gradient(145deg, #323232, #3c3b3b);
-    box-shadow: 1.2rem 1.2rem 2.4rem #272727,
-        -1.2rem -1.2rem 2.4rem #494848;
-} */
-/* // changelog-end */
 
 .navMobileLinks {
     font-size: 2.2rem;

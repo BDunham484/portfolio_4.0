@@ -7,3 +7,37 @@
     background-size: cover;
     background-position: center;
 }
+
+.gridSquares {
+    width: 5rem;
+    height: 5rem;
+    border: 1px solid teal;
+        /* background: 'linear-gradient(45deg, #f3ec78, #af4261)', */
+}
+
+.motionSection {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.gridContainer {
+    width: 100vw;
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.deadGridSquare {
+    width: 5rem;
+    height: 5rem;
+    border: 1px solid transparent;
+    background: transparent
+}
