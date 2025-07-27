@@ -11,8 +11,11 @@
 .gridSquares {
     width: 5rem;
     height: 5rem;
-    border: 1px solid teal;
-        /* background: 'linear-gradient(45deg, #f3ec78, #af4261)', */
+    /* border: 1px solid teal; */
+    /* background: linear-gradient(45deg, #f3ec78, #af4261); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .motionSection {
@@ -38,6 +41,6 @@
 .deadGridSquare {
     width: 5rem;
     height: 5rem;
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     background: transparent
 }

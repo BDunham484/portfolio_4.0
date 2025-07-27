@@ -51,7 +51,14 @@ const About = () => {
             className={gridSquares}
             style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
             onClick={() => setDeadAliens((prev) => [...prev, index])}
-        />
+        >
+            <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '30px',
+            }}>👾</span>
+        </div>
     ));
 
     console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
@@ -79,7 +86,7 @@ const About = () => {
                     }}>
                         {/* <div key={'square-' + square.key} style={{ display: 'inline-block' }}> */}
                         {deadAliens.includes(index) ? (
-                            <div className={deadGridSquare} />
+                            <div style={{ width: squareWidth, height: squareHeight, background: 'transparent' }} />
                         ) : square}
                     </div>
 
