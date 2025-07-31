@@ -41,6 +41,10 @@ const About = () => {
         setNumRowsCols({ rows, cols });
     }, [gridSize]);
 
+    const playerOneStartingPosition = numRowsCols.cols * (numRowsCols.rows - 2) + Math.floor(numRowsCols.cols / 2);
+    const [playerOneIndex, setPlayerOneIndex] = useState<number>(playerOneStartingPosition);
+
+
     // Calculate exact square size to fill container with no gaps
     const squareWidth = gridSize ? gridSize.width / numRowsCols.cols : 50;
     const squareHeight = gridSize ? gridSize.height / numRowsCols.rows : 50;
@@ -53,9 +57,9 @@ const About = () => {
         ? Math.floor(numRowsCols.cols * .3333) / 2
         : (Math.floor(numRowsCols.cols * .3333) + 1) / 2;
 
-    const alienIndexes = Array.from({ length: (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4 }, (_, index) => {
+    const alienIndexes = Array.from({ length: (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 5 }, (_, index) => {
         {
-            const arrayLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4;
+            // const arrayLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4;
             const rowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
             const firstRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
             const secondeRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 2;
@@ -64,7 +68,6 @@ const About = () => {
 
             console.log('🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣');
             console.log('🍣🍣🍣🍣 index: ', index);
-            console.log('🍣🍣🍣🍣 arrayLength: ', arrayLength);
             console.log('🍣🍣🍣🍣 2ndRow: ', numRowsCols.cols + firstIndexOfFirstRowThatAliensAreIn + 1);
             console.log('🍣🍣🍣🍣 firstRowLength: ', firstRowLength);
             console.log('🍣🍣🍣🍣 secondeRowLength: ', secondeRowLength);
@@ -78,10 +81,12 @@ const About = () => {
                 return firstIndexOfFirstRowThatAliensAreIn + index;
             } else if (index >= rowLength && (index <= ((rowLength * 2) - 1))) {
                 return (numRowsCols.cols + firstIndexOfFirstRowThatAliensAreIn) + (index - firstRowLength);
-            } else if (index >= rowLength * 2 && (index <= (rowLength * 3) -1 )) {
+            } else if (index >= rowLength * 2 && (index <= (rowLength * 3) - 1)) {
                 return (numRowsCols.cols * 2 + firstIndexOfFirstRowThatAliensAreIn) + (index - secondeRowLength);
             } else if (index >= rowLength * 3 && (index <= (rowLength * 4) - 1)) {
                 return (numRowsCols.cols * 3 + firstIndexOfFirstRowThatAliensAreIn) + (index - thirdRowLength);
+            } else if (index >= rowLength * 4 && (index <= (rowLength * 5) - 1)) {
+                return (numRowsCols.cols * 4 + firstIndexOfFirstRowThatAliensAreIn) + (index - fourthRowLength);
             }
         }
     });
@@ -111,18 +116,6 @@ const About = () => {
                     className={gridSquares}
                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
                 />
-                // <div
-                //     key={index}
-                //     className={gridSquares}
-                //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                // >
-                //     <span style={{
-                //         display: 'flex',
-                //         alignItems: 'center',
-                //         justifyContent: 'center',
-                //         fontSize: '30px',
-                //     }}>🪐</span>
-                // </div>
             );
         }
     });
@@ -141,9 +134,64 @@ const About = () => {
     console.log('🩻🩻🩻🩻 Add thos two: ', numberOfSquaresInARowThatWontHaveAnAlien + numberOfSquaresInARowThatHasAnAlien);
     console.log('🩻🩻🩻🩻 firstIndexOfFirstRowThatAliensAreIn: ', firstIndexOfFirstRowThatAliensAreIn);
     console.log('🩻🩻🩻🩻 alienIndexes: ', alienIndexes);
+    console.log('🩻🩻🩻🩻 playerOneStartingPosition: ', playerOneStartingPosition);
     console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
     console.log(' ');
 
+    useEffect(() => {
+        const readyPlayerOne = (event: KeyboardEvent) => {
+            const rowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
+
+            switch (event.key) {
+                case 'ArrowLeft':
+                    // changelog-start
+                    if (playerOneIndex % numRowsCols.cols !== 0) {
+                    // if (playerOneIndex > 0) {
+                        // changelog-end
+                        setPlayerOneIndex((prev) => prev - 1);
+                    }
+                    break;
+                case 'ArrowRight':
+                    // changelog-start
+                    if (playerOneIndex % numRowsCols.cols < numRowsCols.cols - 1) {
+                    // if (playerOneIndex < squares.length - 1) {
+                        // changelog-end
+                        setPlayerOneIndex((prev) => prev + 1);
+                    }
+                    break;
+                case 'ArrowUp':
+                    if (playerOneIndex - numRowsCols.cols >= 0) {
+                        setPlayerOneIndex((prev) => prev - numRowsCols.cols);
+                    }
+                    break;
+                case 'ArrowDown':
+                    if (playerOneIndex + numRowsCols.cols < squares.length) {
+                        setPlayerOneIndex((prev) => prev + numRowsCols.cols);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        document.addEventListener('keydown', readyPlayerOne);
+        return () => {
+            document.removeEventListener('keydown', readyPlayerOne);
+        };
+    }, [numRowsCols.cols, playerOneIndex, squares.length, numberOfSquaresInARowThatWontHaveAnAlien]);
+
+    // const remove = () => {
+
+    // };
+
+
+    // const moveInvaders = () => {
+    //     const leftEdge = playerOneIndex % numRowsCols.cols === 0;
+    //     const rightEdge = playerOneIndex % numRowsCols.cols === numRowsCols.cols - 1;
+    //     const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
+
+
+    // };
 
     return (
         <motion.section
@@ -155,17 +203,34 @@ const About = () => {
                 ref={gridRef}
                 className={gridContainer}
             >
-                {squares.map((square, index) => (
-                    <div key={'square-' + square.key} style={{
-                        display: 'flex',
-                    }}>
-                        {/* <div key={'square-' + square.key} style={{ display: 'inline-block' }}> */}
-                        {deadAliens.includes(index) ? (
-                            <div style={{ width: squareWidth, height: squareHeight, background: 'transparent' }} />
-                        ) : square}
-                    </div>
+                {squares.map((square, index) => {
+                    if (index === playerOneIndex) {
+                        return (
+                            <div
+                                key={'square-' + square.key}
+                                style={{ width: squareWidth, height: squareHeight, background: 'transparent' }}>
+                                <span style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'center',
+                                    fontSize: '60px',
+                                }}>{'🛸'}</span>
+                            </div>
+                        );
+                    }
 
-                ))}
+                    return (
+                        <div key={'square-' + square.key} style={{
+                            display: 'flex',
+                        }}>
+                            {/* <div key={'square-' + square.key} style={{ display: 'inline-block' }}> */}
+                            {deadAliens.includes(index) ? (
+                                <div style={{ width: squareWidth, height: squareHeight, background: 'transparent' }} />
+                            ) : square}
+                        </div>
+
+                    );
+                })}
             </div>
         </motion.section>
     );
