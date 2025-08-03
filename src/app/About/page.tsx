@@ -1,6 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSectionInView } from '../../hooks/useSectionInView';
 import styles from './About.module.css';
 
@@ -10,6 +10,8 @@ const About = () => {
     const [gridSize, setGridSize] = useState<{ width: number; height: number } | null>(null);
     const [numRowsCols, setNumRowsCols] = useState<{ rows: number; cols: number }>({ rows: 13, cols: 31 });
     const [deadAliens, setDeadAliens] = useState<number[]>([]);
+    const [moveInvadersLeft, setMoveInvadersLeft] = useState<boolean>(true);
+    // const [squares, setSquares] = useState<JSX.Element[]>([]);
 
     const {
         gridSquares,
@@ -57,71 +59,144 @@ const About = () => {
         ? Math.floor(numRowsCols.cols * .3333) / 2
         : (Math.floor(numRowsCols.cols * .3333) + 1) / 2;
 
+    const rowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
+
     const alienIndexes = Array.from({ length: (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 5 }, (_, index) => {
-        {
-            // const arrayLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4;
-            const rowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
-            const firstRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
-            const secondeRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 2;
-            const thirdRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 3;
-            const fourthRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4;
+        const firstRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
+        const secondeRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 2;
+        const thirdRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 3;
+        const fourthRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4;
 
-            console.log('🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣');
-            console.log('🍣🍣🍣🍣 index: ', index);
-            console.log('🍣🍣🍣🍣 2ndRow: ', numRowsCols.cols + firstIndexOfFirstRowThatAliensAreIn + 1);
-            console.log('🍣🍣🍣🍣 firstRowLength: ', firstRowLength);
-            console.log('🍣🍣🍣🍣 secondeRowLength: ', secondeRowLength);
-            console.log('🍣🍣🍣🍣 thirdRowLength: ', thirdRowLength);
-            console.log('🍣🍣🍣🍣 fourthRowLength: ', fourthRowLength);
-            console.log('🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣🍣');
-            console.log(' ');
-            if (index === 0) {
-                return firstIndexOfFirstRowThatAliensAreIn;
-            } else if (index > 0 && index <= (rowLength) - 1) {
-                return firstIndexOfFirstRowThatAliensAreIn + index;
-            } else if (index >= rowLength && (index <= ((rowLength * 2) - 1))) {
-                return (numRowsCols.cols + firstIndexOfFirstRowThatAliensAreIn) + (index - firstRowLength);
-            } else if (index >= rowLength * 2 && (index <= (rowLength * 3) - 1)) {
-                return (numRowsCols.cols * 2 + firstIndexOfFirstRowThatAliensAreIn) + (index - secondeRowLength);
-            } else if (index >= rowLength * 3 && (index <= (rowLength * 4) - 1)) {
-                return (numRowsCols.cols * 3 + firstIndexOfFirstRowThatAliensAreIn) + (index - thirdRowLength);
-            } else if (index >= rowLength * 4 && (index <= (rowLength * 5) - 1)) {
-                return (numRowsCols.cols * 4 + firstIndexOfFirstRowThatAliensAreIn) + (index - fourthRowLength);
-            }
-        }
-    });
-    // changelog-end
-
-    const squares = Array.from({ length: numRowsCols.rows * numRowsCols.cols }, (_, index) => {
-        if (alienIndexes.includes(index)) {
-            return (
-                <div
-                    key={index}
-                    className={gridSquares}
-                    style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    onClick={() => setDeadAliens((prev) => [...prev, index])}
-                >
-                    <span style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        fontSize: '30px',
-                    }}>👾</span>
-                </div>
-            );
+        if (index === 0) {
+            return firstIndexOfFirstRowThatAliensAreIn;
+        } else if (index > 0 && index <= (rowLength) - 1) {
+            return firstIndexOfFirstRowThatAliensAreIn + index;
+        } else if (index >= rowLength && (index <= ((rowLength * 2) - 1))) {
+            return (numRowsCols.cols + firstIndexOfFirstRowThatAliensAreIn) + (index - firstRowLength);
+        } else if (index >= rowLength * 2 && (index <= (rowLength * 3) - 1)) {
+            return (numRowsCols.cols * 2 + firstIndexOfFirstRowThatAliensAreIn) + (index - secondeRowLength);
+        } else if (index >= rowLength * 3 && (index <= (rowLength * 4) - 1)) {
+            return (numRowsCols.cols * 3 + firstIndexOfFirstRowThatAliensAreIn) + (index - thirdRowLength);
+        } else if (index >= rowLength * 4 && (index <= (rowLength * 5) - 1)) {
+            return (numRowsCols.cols * 4 + firstIndexOfFirstRowThatAliensAreIn) + (index - fourthRowLength);
         } else {
-            return (
-                <div
-                    key={index}
-                    className={gridSquares}
-                    style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                />
-            );
+            return -1;
         }
     });
+
+    // const [squares, setSquares] = useState<JSX.Element[]>([]);
+
+    // useEffect(() => {
+    //     setSquares(
+    //         Array.from({ length: numRowsCols.rows * numRowsCols.cols }, (_, index) => {
+    //             if (alienIndexes.includes(index)) {
+    //                 return (
+    //                     <div
+    //                         key={index}
+    //                         className={gridSquares}
+    //                         style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+    //                         onClick={() => setDeadAliens((prev) => [...prev, index])}
+    //                     >
+    //                         <span style={{
+    //                             display: 'flex',
+    //                             alignItems: 'center',
+    //                             justifyContent: 'center',
+    //                             fontSize: '30px',
+    //                         }}>🚽</span>
+    //                     </div>
+    //                 );
+    //             } else {
+    //                 return (
+    //                     <div
+    //                         key={index}
+    //                         className={gridSquares}
+    //                         style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+    //                     />
+    //                 );
+    //             }
+    //         })
+    //     );
+    // }, [numRowsCols.rows, numRowsCols.cols, alienIndexes, squareWidth, squareHeight, gridSquares]);
+    // Use a function for alienIndexes in the dependency array to force recalculation
+
+    const test = JSON.stringify(alienIndexes);
+
+    const squares = useMemo(() => (
+        Array.from({ length: numRowsCols.rows * numRowsCols.cols }, (_, index) => {
+            if (alienIndexes.includes(index)) {
+                return (
+                    <div
+                        key={index}
+                        className={gridSquares}
+                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                        onClick={() => setDeadAliens((prev) => [...prev, index])}
+                    >
+                        <span style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '30px',
+                        }}>🚽</span>
+                    </div>
+                );
+            } else {
+                return (
+                    <div
+                        key={index}
+                        className={gridSquares}
+                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                    />
+                );
+            }
+        })
+    ), [
+        numRowsCols.rows,
+        numRowsCols.cols,
+        // Use a stringified version of alienIndexes to trigger updates when its content changes
+        // test,
+        alienIndexes,
+        squareWidth,
+        squareHeight,
+        gridSquares
+    ]);
+
+    // const squares = useMemo(() => (
+    //     Array.from({ length: numRowsCols.rows * numRowsCols.cols }, (_, index) => {
+    //         if (alienIndexes.includes(index)) {
+    //             return (
+    //                 <div
+    //                     key={index}
+    //                     className={gridSquares}
+    //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+    //                     onClick={() => setDeadAliens((prev) => [...prev, index])}
+    //                 >
+    //                     <span style={{
+    //                         display: 'flex',
+    //                         alignItems: 'center',
+    //                         justifyContent: 'center',
+    //                         fontSize: '30px',
+    //                     }}>🚽</span>
+    //                 </div>
+    //             );
+    //         } else {
+    //             return (
+    //                 <div
+    //                     key={index}
+    //                     className={gridSquares}
+    //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+    //                 />
+    //             );
+    //         }
+    //     })
+    // ), [numRowsCols.rows, numRowsCols.cols, alienIndexes, squareWidth, squareHeight, gridSquares]);
 
     console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
     console.log('👾👾👾👾 squares: ', squares);
+    squares.forEach((square, index) => {
+        if (square.props.children?.type === 'span') {
+            console.log('👁️👁️👁️👁️ square: ', square.props.children.props.children + ' ' + index);
+        }
+    });
     console.log('👾👾👾👾 gridSize: ', gridSize);
     console.log('👾👾👾👾 squareWidth: ', squareWidth);
     console.log('👾👾👾👾 squareHeight: ', squareHeight);
@@ -138,6 +213,66 @@ const About = () => {
     console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
     console.log(' ');
 
+    const moveInvaders = useCallback(() => {
+        const leftEdge = firstIndexOfFirstRowThatAliensAreIn % numRowsCols.cols === 0;
+        const rightEdge = (alienIndexes[alienIndexes?.length - 1] ?? rowLength - 1) % numRowsCols.cols === numRowsCols.cols - 1;
+        const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
+
+        console.log('🎃🎃🎃🎃 leftEdge: ', leftEdge);
+        console.log('🎃🎃🎃🎃 rightEdge: ', rightEdge);
+        console.log('🎃🎃🎃🎃 bottomEdge: ', bottomEdge);
+        console.log(' ');
+
+        // if (!alienIndexes || alienIndexes.length === 0) {
+        //     return;
+        // }
+
+        alienIndexes.forEach((alienIndex, index) => {
+            // if (alienIndex && deadAliens.includes(alienIndex)) return;
+            if (!leftEdge && moveInvadersLeft) {
+                alienIndexes[index] = alienIndex - 1; // Move left
+            } else if (leftEdge && moveInvadersLeft) {
+                alienIndexes[index] = alienIndex + 1; // Move right
+                setMoveInvadersLeft(prevState => !prevState);
+            } else if (!rightEdge && !moveInvadersLeft) {
+                alienIndexes[index] = alienIndex + 1; // Move right
+            } else if (rightEdge && !moveInvadersLeft) {
+                alienIndexes[index] = alienIndex - 1; // Move left
+                setMoveInvadersLeft(prevState => !prevState);
+            }
+            // Move left or right based on edges
+            // if (leftEdge && !rightEdge) {
+            //     alienIndexes[index] = alienIndex + 1; // Move right
+            // } else if (!leftEdge && rightEdge) {
+            //     alienIndexes[index] = alienIndex - 1; // Move left
+            // } else {
+            //     // If at bottom edge, reset to top row
+            //     if (bottomEdge) {
+            //         alienIndexes[index] = firstIndexOfFirstRowThatAliensAreIn + index;
+            //     } else {
+            //         if (typeof alienIndexes[index] === 'number') {
+            //             alienIndexes[index] += numRowsCols.cols;
+            //         }
+            //     }
+            // }
+        }
+        );
+        console.log('🚽🚽🚽🚽 alienIndex: ', alienIndexes);
+    }, [
+        alienIndexes,
+        numRowsCols.cols,
+        numRowsCols.rows,
+        firstIndexOfFirstRowThatAliensAreIn,
+        playerOneIndex,
+        moveInvadersLeft,
+        rowLength,
+        setMoveInvadersLeft,
+    ]);
+
+    // moveInvaders();
+
+    // setInterval(moveInvaders, 5000);
+
     useEffect(() => {
         const readyPlayerOne = (event: KeyboardEvent) => {
             const rowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
@@ -146,7 +281,7 @@ const About = () => {
                 case 'ArrowLeft':
                     // changelog-start
                     if (playerOneIndex % numRowsCols.cols !== 0) {
-                    // if (playerOneIndex > 0) {
+                        // if (playerOneIndex > 0) {
                         // changelog-end
                         setPlayerOneIndex((prev) => prev - 1);
                     }
@@ -154,20 +289,18 @@ const About = () => {
                 case 'ArrowRight':
                     // changelog-start
                     if (playerOneIndex % numRowsCols.cols < numRowsCols.cols - 1) {
-                    // if (playerOneIndex < squares.length - 1) {
+                        // if (playerOneIndex < squares.length - 1) {
                         // changelog-end
                         setPlayerOneIndex((prev) => prev + 1);
                     }
                     break;
-                case 'ArrowUp':
-                    if (playerOneIndex - numRowsCols.cols >= 0) {
-                        setPlayerOneIndex((prev) => prev - numRowsCols.cols);
-                    }
-                    break;
+                // case 'ArrowUp':
+                //     if (playerOneIndex - numRowsCols.cols >= 0) {
+                //         setPlayerOneIndex((prev) => prev - numRowsCols.cols);
+                //     }
+                //     break;
                 case 'ArrowDown':
-                    if (playerOneIndex + numRowsCols.cols < squares.length) {
-                        setPlayerOneIndex((prev) => prev + numRowsCols.cols);
-                    }
+                    moveInvaders();
                     break;
                 default:
                     break;
@@ -178,20 +311,7 @@ const About = () => {
         return () => {
             document.removeEventListener('keydown', readyPlayerOne);
         };
-    }, [numRowsCols.cols, playerOneIndex, squares.length, numberOfSquaresInARowThatWontHaveAnAlien]);
-
-    // const remove = () => {
-
-    // };
-
-
-    // const moveInvaders = () => {
-    //     const leftEdge = playerOneIndex % numRowsCols.cols === 0;
-    //     const rightEdge = playerOneIndex % numRowsCols.cols === numRowsCols.cols - 1;
-    //     const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
-
-
-    // };
+    }, [numRowsCols.cols, playerOneIndex, squares.length, numberOfSquaresInARowThatWontHaveAnAlien, moveInvaders]);
 
     return (
         <motion.section
