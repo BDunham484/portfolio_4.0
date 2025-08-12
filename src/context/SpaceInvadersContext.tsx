@@ -23,7 +23,6 @@ export const SpaceInvadersProvider = ({ children }: { children: ReactNode }) => 
     const gridRef = useRef<HTMLDivElement | null>(null);
     const [gridSize, setGridSize] = useState<{ width: number; height: number } | null>(null);
     const [numRowsCols, setNumRowsCols] = useState<{ rows: number; cols: number }>({ rows: 0, cols: 0 });
-    // const [numRowsCols, setNumRowsCols] = useState<{ rows: number; cols: number }>({ rows: 13, cols: 31 });
 
     useEffect(() => {
         if (gridRef.current) {
