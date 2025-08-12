@@ -8,6 +8,21 @@
   background-position: center;
 }
 
+/* changelog-start */
+.gridContainer {
+    width: 100vw;
+    height: 85vh;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+    z-index: -1;
+    position: absolute;
+}
+/* changelog-end */
+
 .imageContainer {
   position: relative;
   height: 100%;

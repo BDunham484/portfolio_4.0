@@ -19,6 +19,7 @@ const Home = () => {
   const pathname = usePathname();
   const context = useContext(LayoutRouterContext);
 
+
   const {
     imageContainer,
     triangleWrapper,

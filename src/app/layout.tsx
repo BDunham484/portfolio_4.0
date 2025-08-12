@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 // eslint-disable-next-line camelcase
 import { Geist, Geist_Mono } from 'next/font/google';
+import { SpaceInvadersProvider } from '../context/SpaceInvadersContext';
+import FramerMotionWrapper from './Components/FramerMotionWrapper';
 import Header from './Components/Header/Header';
 import './globals.css';
-import FramerMotionWrapper from './Components/FramerMotionWrapper';
+import GhostGrid from './Components/GhostGrid/GhostGrid';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,13 +28,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='en'>
-      <body className={`${geistSans.variable} ${geistMono.variable} global-bg`}>
-        <Header />
-        <FramerMotionWrapper>
-          {children}
-        </FramerMotionWrapper>
-      </body>
-    </html>
+    <SpaceInvadersProvider>
+      <html lang='en'>
+        <body className={`${geistSans.variable} ${geistMono.variable} global-bg`}>
+          <GhostGrid />
+          <Header />
+          <FramerMotionWrapper>
+            {children}
+          </FramerMotionWrapper>
+        </body>
+      </html>
+    </SpaceInvadersProvider>
   );
 }
