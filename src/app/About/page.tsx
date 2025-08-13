@@ -11,7 +11,7 @@ const About = () => {
     const { gridSize, numRowsCols } = useSpaceInvaders();
     const { ref } = useSectionInView(0.6);
     const [deadAliens, setDeadAliens] = useState<number[]>([]);
-    const [moveInvadersLeft, setMoveInvadersLeft] = useState<boolean>(true);
+    const movingLeft = useRef<boolean>(true);
     // const alienIndexRef = useRef<number[]>([]);
     // const squaresRef = useRef<JSX.Element[] | undefined>([]);
     const playerEngagedRef = useRef<boolean>(false);
@@ -37,7 +37,7 @@ const About = () => {
         ? Math.floor(numRowsCols.cols * .3333) / 2
         : (Math.floor(numRowsCols.cols * .3333) + 1) / 2;
 
-    const rowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
+    const rowLength = useMemo(() => (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien), [numRowsCols.cols, numberOfSquaresInARowThatWontHaveAnAlien]);
 
     const alienIndexes = Array.from({ length: (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 5 }, (_, index) => {
         const firstRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
@@ -77,7 +77,8 @@ const About = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: '30px',
-                        }}>🚽</span>
+                        }}>{index}</span>
+                        {/* }}>🚽</span> */}
                     </div>
                 );
             } else {
@@ -86,7 +87,12 @@ const About = () => {
                         key={index}
                         className={gridSquares}
                         style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    />
+                    >{index}</div>
+                    // <div
+                    //     key={index}
+                    //     className={gridSquares}
+                    //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                    // />
                 );
             }
         });
@@ -118,33 +124,38 @@ const About = () => {
         if (!playerEngagedRef.current && playerOneStartingPosition !== playerOneIndex) {
             setPlayerOneIndex(playerOneStartingPosition);
         }
-    },  [playerOneStartingPosition, playerOneIndex]);
+    }, [playerOneStartingPosition, playerOneIndex]);
 
-    console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
-    console.log('👾👾👾👾 numRowsCols.rows * numRowsCols.cols: ', numRowsCols.rows * numRowsCols.cols,);
-    console.log('👾👾👾👾 squares: ', squares);
-    console.log('👾👾👾👾 gridSize: ', gridSize);
-    console.log('👾👾👾👾 squareWidth: ', squareWidth);
-    console.log('👾👾👾👾 squareHeight: ', squareHeight);
-    console.log('👾👾👾👾 numRowsCols: ', numRowsCols);
-    console.log('👾👾👾👾 alienIndexes: ', alienIndexes);
-    console.log('👾👾👾👾 alienLocation: ', alienLocation);
-    console.log('👾👾👾👾 gridState: ', gridState);
-    console.log('👾👾👾👾 playerOneStartingPosition: ', playerOneStartingPosition);
-    console.log('👾👾👾👾 playerOneIndex: ', playerOneIndex);
-    console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
-    console.log(' ');
+    // console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
+    // console.log('👾👾👾👾 numRowsCols.rows * numRowsCols.cols: ', numRowsCols.rows * numRowsCols.cols,);
+    // console.log('👾👾👾👾 squares: ', squares);
+    // console.log('👾👾👾👾 gridSize: ', gridSize);
+    // console.log('👾👾👾👾 squareWidth: ', squareWidth);
+    // console.log('👾👾👾👾 squareHeight: ', squareHeight);
+    // console.log('👾👾👾👾 numRowsCols: ', numRowsCols);
+    // console.log('👾👾👾👾 alienIndexes: ', alienIndexes);
+    // console.log('👾👾👾👾 alienLocation: ', alienLocation);
+    // console.log('👾👾👾👾 gridState: ', gridState);
+    // console.log('👾👾👾👾 playerOneStartingPosition: ', playerOneStartingPosition);
+    // console.log('👾👾👾👾 playerOneIndex: ', playerOneIndex);
+    // console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
+    // console.log(' ');
 
     const moveInvaders = useCallback(() => {
-        const leftEdge = firstIndexOfFirstRowThatAliensAreIn % numRowsCols.cols === 0;
-        const rightEdge = (alienIndexes[alienIndexes?.length - 1] ?? rowLength - 1) % numRowsCols.cols === numRowsCols.cols - 1;
+        const leftEdge = (alienLocation[0] ?? firstIndexOfFirstRowThatAliensAreIn) % numRowsCols.cols === 0;
+        // const leftEdge = firstIndexOfFirstRowThatAliensAreIn % numRowsCols.cols === 0;
+        const rightEdge = (alienLocation[alienLocation?.length - 1] ?? rowLength - 1) % numRowsCols.cols === numRowsCols.cols - 1;
         const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
+        const downShift = false;
 
-        console.log('🎃🎃🎃🎃 leftEdge: ', leftEdge);
-        console.log('🎃🎃🎃🎃 moveInvadersLeft: ', moveInvadersLeft);
-        console.log('🎃🎃🎃🎃 rightEdge: ', rightEdge);
-        console.log('🎃🎃🎃🎃 bottomEdge: ', bottomEdge);
-        // console.log(' ');
+        console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
+        console.log('🕹️🕹️🕹️🕹️ leftEdge: ', leftEdge);
+        console.log('🕹️🕹️🕹️🕹️ alienLocation[0]: ', (alienLocation[0] ?? firstIndexOfFirstRowThatAliensAreIn));
+        console.log('🕹️🕹️🕹️🕹️ numRowsCols.cols === numRowsCols.cols - 1: ', numRowsCols.cols === numRowsCols.cols - 1);
+        console.log('🕹️🕹️🕹️🕹️ movingLeft.current: ', movingLeft.current);
+        console.log('🕹️🕹️🕹️🕹️ rightEdge: ', rightEdge);
+        console.log('🕹️🕹️🕹️🕹️ bottomEdge: ', bottomEdge);
+
 
         if (!alienIndexes || alienIndexes.length === 0) {
             return;
@@ -153,27 +164,42 @@ const About = () => {
         setAlienLocation(prevAlienLocation => {
             let newAlienIndexes = [...prevAlienLocation];
 
-            newAlienIndexes = newAlienIndexes.map((alienIndex, index) => {
-                if (!leftEdge && moveInvadersLeft) {
+            newAlienIndexes = newAlienIndexes.map((alienIndex, index, thisAliensArray) => {
+                if (!leftEdge && movingLeft.current) {
+                    console.log('🕹️🕹️🕹️🕹️ Moving left');
                     return alienIndex - 1;
-                } else if (leftEdge && moveInvadersLeft) {
-                    setMoveInvadersLeft(prev => !prev);
+                } else if (leftEdge && movingLeft.current) {
+                    console.log('🧩🧩🧩🧩 Moving down');
+                    console.log('🕹️🕹️🕹️🕹️ thisAliensArray[0]: ', thisAliensArray[0]);
+                    console.log('🕹️🕹️🕹️🕹️ thisAliensArray[0]+ numRowsCols.cols: ', (thisAliensArray[0] ?? 0) + numRowsCols.cols);
+                    console.log('🕹️🕹️🕹️🕹️ numRowsCols.cols + 1: ', numRowsCols.cols + 1);
+                    console.log('🕹️🕹️🕹️🕹️ alienIndex: ', alienIndex);
+                    console.log('🕹️🕹️🕹️🕹️ alienIndex + numRowsCols.cols: ', alienIndex + numRowsCols.cols);
+                    // if (((thisAliensArray[0] ?? 0) + numRowsCols.cols) === numRowsCols.cols) {
+                    if (thisAliensArray[thisAliensArray.length - 1] === index) {
+                        console.log('🧩🧩🧩🧩 resetting movingLeft');
+                        movingLeft.current = false;
+                    }
+                    return (alienIndex + numRowsCols.cols);
+                } else if (!rightEdge && !movingLeft.current) {
+                    console.log('🕹️🕹️🕹️🕹️ Moving right');
                     return alienIndex + 1;
-                } else if (!rightEdge && !moveInvadersLeft) {
-                    return alienIndex + 1;
-                } else if (rightEdge && !moveInvadersLeft) {
-                    setMoveInvadersLeft(prev => !prev);
-                    return alienIndex - 1;
+                } else if (rightEdge && !movingLeft.current) {
+                    console.log('🕹️🕹️🕹️🕹️ Moving down');
+                    movingLeft.current = true;
+                    return (alienIndex + numRowsCols.cols);
+                    // return alienIndex - 1;
                 }
                 return alienIndex;
             });
 
             return newAlienIndexes;
         });
-
-        console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
-        console.log('🩻🩻🩻🩻 alienIndexes: ', alienIndexes);
-        console.log('🩻🩻🩻🩻 alienLocation: ', alienLocation);
+        console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
+        console.log(' ');
+        // console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
+        // console.log('🩻🩻🩻🩻 alienIndexes: ', alienIndexes);
+        // console.log('🩻🩻🩻🩻 alienLocation: ', alienLocation);
 
         setGridState((prevState) => {
             let newState: JSX.Element[] = [...prevState];
@@ -192,7 +218,8 @@ const About = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 fontSize: '30px',
-                            }}>🚽</span>
+                            }}>{index}</span>
+                            {/* }}>🚽</span> */}
                         </div>
                     );
                 } else if (deadAliens.includes(index)) {
@@ -209,7 +236,12 @@ const About = () => {
                             key={'empty' + index}
                             className={gridSquares}
                             style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        />
+                        >{index}</div>
+                        // <div
+                        //     key={'empty' + index}
+                        //     className={gridSquares}
+                        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                        // />
                     );
                 }
             });
@@ -217,39 +249,36 @@ const About = () => {
             return newState;
         });
 
-
-        console.log('🩻🩻🩻🩻 gridState: ', gridState);
-        console.log('🩻🩻🩻🩻 playerOneStartingPosition: ', playerOneStartingPosition);
-        console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
-        console.log(' ');
+        // console.log('🩻🩻🩻🩻 gridState: ', gridState);
+        // console.log('🩻🩻🩻🩻 playerOneStartingPosition: ', playerOneStartingPosition);
+        // console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
+        // console.log(' ');
     }, [
         alienIndexes,
         numRowsCols.cols,
         numRowsCols.rows,
         firstIndexOfFirstRowThatAliensAreIn,
         playerOneIndex,
-        moveInvadersLeft,
+        // moveInvadersLeft,
         rowLength,
-        setMoveInvadersLeft,
-        playerOneStartingPosition,
+        // setMoveInvadersLeft,
+        // playerOneStartingPosition,
         gridSquares,
         squareWidth,
         squareHeight,
-        gridState,
+        // gridState,
         deadAliens,
         deadGridSquare,
         alienLocation,
     ]);
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            moveInvaders();
-        }, 1000);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         moveInvaders();
+    //     }, 1000);
 
-        return () => clearInterval(interval);
-    }, [alienIndexes, moveInvaders]);
-
-    // setInterval(moveInvaders, 5000);
+    //     return () => clearInterval(interval);
+    // }, [alienIndexes, moveInvaders]);
 
     useEffect(() => {
         const readyPlayerOne = (event: KeyboardEvent) => {
