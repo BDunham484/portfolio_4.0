@@ -15,6 +15,8 @@ const About = () => {
     // const alienIndexRef = useRef<number[]>([]);
     // const squaresRef = useRef<JSX.Element[] | undefined>([]);
     const playerEngagedRef = useRef<boolean>(false);
+    const leftDownShifts = useRef<number>(1);
+    const rightDownShifts = useRef<number>(7);
 
     const {
         gridSquares,
@@ -77,22 +79,22 @@ const About = () => {
                             alignItems: 'center',
                             justifyContent: 'center',
                             fontSize: '30px',
-                        }}>{index}</span>
-                        {/* }}>🚽</span> */}
+                        // }}>{index}</span>
+                        }}>👾</span>
                     </div>
                 );
             } else {
                 return (
-                    <div
-                        key={index}
-                        className={gridSquares}
-                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    >{index}</div>
                     // <div
                     //     key={index}
                     //     className={gridSquares}
                     //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    // />
+                    // >{index}</div>
+                    <div
+                        key={index}
+                        className={gridSquares}
+                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                    />
                 );
             }
         });
@@ -145,16 +147,11 @@ const About = () => {
         const leftEdge = (alienLocation[0] ?? firstIndexOfFirstRowThatAliensAreIn) % numRowsCols.cols === 0;
         // const leftEdge = firstIndexOfFirstRowThatAliensAreIn % numRowsCols.cols === 0;
         const rightEdge = (alienLocation[alienLocation?.length - 1] ?? rowLength - 1) % numRowsCols.cols === numRowsCols.cols - 1;
-        const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
-        const downShift = false;
+        // const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
 
         console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
-        console.log('🕹️🕹️🕹️🕹️ leftEdge: ', leftEdge);
-        console.log('🕹️🕹️🕹️🕹️ alienLocation[0]: ', (alienLocation[0] ?? firstIndexOfFirstRowThatAliensAreIn));
-        console.log('🕹️🕹️🕹️🕹️ numRowsCols.cols === numRowsCols.cols - 1: ', numRowsCols.cols === numRowsCols.cols - 1);
-        console.log('🕹️🕹️🕹️🕹️ movingLeft.current: ', movingLeft.current);
-        console.log('🕹️🕹️🕹️🕹️ rightEdge: ', rightEdge);
-        console.log('🕹️🕹️🕹️🕹️ bottomEdge: ', bottomEdge);
+        // console.log('🕹️🕹️🕹️🕹️ playerOneIndex: ', playerOneIndex);
+        // console.log('🕹️🕹️🕹️🕹️ bottomEdge: ', bottomEdge);
 
 
         if (!alienIndexes || alienIndexes.length === 0) {
@@ -166,40 +163,29 @@ const About = () => {
 
             newAlienIndexes = newAlienIndexes.map((alienIndex, index, thisAliensArray) => {
                 if (!leftEdge && movingLeft.current) {
-                    console.log('🕹️🕹️🕹️🕹️ Moving left');
                     return alienIndex - 1;
                 } else if (leftEdge && movingLeft.current) {
-                    console.log('🧩🧩🧩🧩 Moving down');
-                    console.log('🕹️🕹️🕹️🕹️ thisAliensArray[0]: ', thisAliensArray[0]);
-                    console.log('🕹️🕹️🕹️🕹️ thisAliensArray[0]+ numRowsCols.cols: ', (thisAliensArray[0] ?? 0) + numRowsCols.cols);
-                    console.log('🕹️🕹️🕹️🕹️ numRowsCols.cols + 1: ', numRowsCols.cols + 1);
-                    console.log('🕹️🕹️🕹️🕹️ alienIndex: ', alienIndex);
-                    console.log('🕹️🕹️🕹️🕹️ alienIndex + numRowsCols.cols: ', alienIndex + numRowsCols.cols);
-                    // if (((thisAliensArray[0] ?? 0) + numRowsCols.cols) === numRowsCols.cols) {
-                    if (thisAliensArray[thisAliensArray.length - 1] === index) {
-                        console.log('🧩🧩🧩🧩 resetting movingLeft');
+                    if (index === 0 && alienIndex === numRowsCols.cols * leftDownShifts.current) {
+                        leftDownShifts.current += 2;
                         movingLeft.current = false;
                     }
                     return (alienIndex + numRowsCols.cols);
                 } else if (!rightEdge && !movingLeft.current) {
-                    console.log('🕹️🕹️🕹️🕹️ Moving right');
                     return alienIndex + 1;
                 } else if (rightEdge && !movingLeft.current) {
-                    console.log('🕹️🕹️🕹️🕹️ Moving down');
-                    movingLeft.current = true;
+                    if (index === alienIndexes.length - 1 && alienIndex === ((numRowsCols.cols * rightDownShifts.current) - 1)) {
+                        rightDownShifts.current += 2;
+                        movingLeft.current = true;
+                    }
                     return (alienIndex + numRowsCols.cols);
-                    // return alienIndex - 1;
                 }
                 return alienIndex;
             });
 
             return newAlienIndexes;
         });
-        console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
-        console.log(' ');
-        // console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
-        // console.log('🩻🩻🩻🩻 alienIndexes: ', alienIndexes);
-        // console.log('🩻🩻🩻🩻 alienLocation: ', alienLocation);
+        // console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
+        // console.log(' ');
 
         setGridState((prevState) => {
             let newState: JSX.Element[] = [...prevState];
@@ -218,8 +204,8 @@ const About = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 fontSize: '30px',
-                            }}>{index}</span>
-                            {/* }}>🚽</span> */}
+                                // }}>{index}</span>
+                            }}>👾</span>
                         </div>
                     );
                 } else if (deadAliens.includes(index)) {
@@ -232,16 +218,16 @@ const About = () => {
                     );
                 } else {
                     return (
-                        <div
-                            key={'empty' + index}
-                            className={gridSquares}
-                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        >{index}</div>
                         // <div
                         //     key={'empty' + index}
                         //     className={gridSquares}
                         //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        // />
+                        // >{index}</div>
+                        <div
+                            key={'empty' + index}
+                            className={gridSquares}
+                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                        />
                     );
                 }
             });
@@ -256,9 +242,9 @@ const About = () => {
     }, [
         alienIndexes,
         numRowsCols.cols,
-        numRowsCols.rows,
+        // numRowsCols.rows,
         firstIndexOfFirstRowThatAliensAreIn,
-        playerOneIndex,
+        // playerOneIndex,
         // moveInvadersLeft,
         rowLength,
         // setMoveInvadersLeft,
@@ -272,13 +258,13 @@ const About = () => {
         alienLocation,
     ]);
 
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         moveInvaders();
-    //     }, 1000);
+    useEffect(() => {
+        const interval = setInterval(() => {
+            moveInvaders();
+        }, 1000);
 
-    //     return () => clearInterval(interval);
-    // }, [alienIndexes, moveInvaders]);
+        return () => clearInterval(interval);
+    }, [alienIndexes, moveInvaders, playerOneIndex]);
 
     useEffect(() => {
         const readyPlayerOne = (event: KeyboardEvent) => {
