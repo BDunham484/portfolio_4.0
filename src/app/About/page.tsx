@@ -1,16 +1,25 @@
 'use client';
 import { motion } from 'framer-motion';
-import { JSX, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { JSX, useCallback, useEffect, useRef, useState } from 'react';
+import { useSpaceInvaders } from '../../context/SpaceInvadersContext';
 import { useSectionInView } from '../../hooks/useSectionInView';
 import styles from './About.module.css';
-// import { useContext } from 'react';
-// import { SpaceInvadersContext } from '../../context/spaceInvadersContext';
-import { useSpaceInvaders } from '../../context/SpaceInvadersContext';
 
 const About = () => {
-    const { gridSize, numRowsCols } = useSpaceInvaders();
+    const {
+        gridSize,
+        numRowsCols,
+        alienIndexes,
+        firstIndexOfFirstRowThatAliensAreIn,
+        rowLength,
+        playerOneStartingPosition,
+        squares,
+        deadAliens,
+        setDeadAliens,
+        squareWidth,
+        squareHeight,
+    } = useSpaceInvaders();
     const { ref } = useSectionInView(0.6);
-    const [deadAliens, setDeadAliens] = useState<number[]>([]);
     const movingLeft = useRef<boolean>(true);
     // const alienIndexRef = useRef<number[]>([]);
     // const squaresRef = useRef<JSX.Element[] | undefined>([]);
@@ -25,88 +34,7 @@ const About = () => {
         deadGridSquare,
     } = styles;
 
-    const playerOneStartingPosition = numRowsCols.cols * (numRowsCols.rows - 2) + Math.floor(numRowsCols.cols / 2);
     const [playerOneIndex, setPlayerOneIndex] = useState<number>(playerOneStartingPosition);
-
-    // Calculate exact square size to fill container with no gaps
-    const squareWidth = gridSize ? gridSize.width / numRowsCols.cols : 50;
-    const squareHeight = gridSize ? gridSize.height / numRowsCols.rows : 50;
-
-    const numberOfSquaresInARowThatHasAnAlien = numRowsCols.cols * .6667;
-    const numberOfSquaresInARowThatWontHaveAnAlien = Math.floor(numRowsCols.cols * .3333);
-    // Get 1/3 of available cols in a row, rounded down to the nearest whole number
-    const firstIndexOfFirstRowThatAliensAreIn = (Math.floor(numRowsCols.cols * .3333) % 2) === 0
-        ? Math.floor(numRowsCols.cols * .3333) / 2
-        : (Math.floor(numRowsCols.cols * .3333) + 1) / 2;
-
-    const rowLength = useMemo(() => (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien), [numRowsCols.cols, numberOfSquaresInARowThatWontHaveAnAlien]);
-
-    const alienIndexes = Array.from({ length: (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 5 }, (_, index) => {
-        const firstRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien);
-        const secondeRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 2;
-        const thirdRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 3;
-        const fourthRowLength = (numRowsCols.cols - numberOfSquaresInARowThatWontHaveAnAlien) * 4;
-
-        if (index === 0) {
-            return firstIndexOfFirstRowThatAliensAreIn;
-        } else if (index > 0 && index <= (rowLength) - 1) {
-            return firstIndexOfFirstRowThatAliensAreIn + index;
-        } else if (index >= rowLength && (index <= ((rowLength * 2) - 1))) {
-            return (numRowsCols.cols + firstIndexOfFirstRowThatAliensAreIn) + (index - firstRowLength);
-        } else if (index >= rowLength * 2 && (index <= (rowLength * 3) - 1)) {
-            return (numRowsCols.cols * 2 + firstIndexOfFirstRowThatAliensAreIn) + (index - secondeRowLength);
-        } else if (index >= rowLength * 3 && (index <= (rowLength * 4) - 1)) {
-            return (numRowsCols.cols * 3 + firstIndexOfFirstRowThatAliensAreIn) + (index - thirdRowLength);
-        } else if (index >= rowLength * 4 && (index <= (rowLength * 5) - 1)) {
-            return (numRowsCols.cols * 4 + firstIndexOfFirstRowThatAliensAreIn) + (index - fourthRowLength);
-        } else {
-            return -1;
-        }
-    });
-
-    const squares = useMemo(() => {
-        return Array.from({ length: numRowsCols.rows * numRowsCols.cols }, (_, index) => {
-            if (alienIndexes.includes(index)) {
-                return (
-                    <div
-                        key={index}
-                        className={gridSquares}
-                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        onClick={() => setDeadAliens((prev) => [...prev, index])}
-                    >
-                        <span style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '30px',
-                        // }}>{index}</span>
-                        }}>👾</span>
-                    </div>
-                );
-            } else {
-                return (
-                    // <div
-                    //     key={index}
-                    //     className={gridSquares}
-                    //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    // >{index}</div>
-                    <div
-                        key={index}
-                        className={gridSquares}
-                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    />
-                );
-            }
-        });
-    }, [
-        numRowsCols.rows,
-        numRowsCols.cols,
-        alienIndexes,
-        squareWidth,
-        squareHeight,
-        gridSquares
-    ]);
-
     const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
     const [gridState, setGridState] = useState<JSX.Element[]>(squares);
 
@@ -128,31 +56,11 @@ const About = () => {
         }
     }, [playerOneStartingPosition, playerOneIndex]);
 
-    // console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
-    // console.log('👾👾👾👾 numRowsCols.rows * numRowsCols.cols: ', numRowsCols.rows * numRowsCols.cols,);
-    // console.log('👾👾👾👾 squares: ', squares);
-    // console.log('👾👾👾👾 gridSize: ', gridSize);
-    // console.log('👾👾👾👾 squareWidth: ', squareWidth);
-    // console.log('👾👾👾👾 squareHeight: ', squareHeight);
-    // console.log('👾👾👾👾 numRowsCols: ', numRowsCols);
-    // console.log('👾👾👾👾 alienIndexes: ', alienIndexes);
-    // console.log('👾👾👾👾 alienLocation: ', alienLocation);
-    // console.log('👾👾👾👾 gridState: ', gridState);
-    // console.log('👾👾👾👾 playerOneStartingPosition: ', playerOneStartingPosition);
-    // console.log('👾👾👾👾 playerOneIndex: ', playerOneIndex);
-    // console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
-    // console.log(' ');
-
     const moveInvaders = useCallback(() => {
         const leftEdge = (alienLocation[0] ?? firstIndexOfFirstRowThatAliensAreIn) % numRowsCols.cols === 0;
         // const leftEdge = firstIndexOfFirstRowThatAliensAreIn % numRowsCols.cols === 0;
         const rightEdge = (alienLocation[alienLocation?.length - 1] ?? rowLength - 1) % numRowsCols.cols === numRowsCols.cols - 1;
         // const bottomEdge = playerOneIndex >= (numRowsCols.rows - 1) * numRowsCols.cols;
-
-        console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
-        // console.log('🕹️🕹️🕹️🕹️ playerOneIndex: ', playerOneIndex);
-        // console.log('🕹️🕹️🕹️🕹️ bottomEdge: ', bottomEdge);
-
 
         if (!alienIndexes || alienIndexes.length === 0) {
             return;
@@ -184,8 +92,6 @@ const About = () => {
 
             return newAlienIndexes;
         });
-        // console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
-        // console.log(' ');
 
         setGridState((prevState) => {
             let newState: JSX.Element[] = [...prevState];
@@ -234,26 +140,16 @@ const About = () => {
 
             return newState;
         });
-
-        // console.log('🩻🩻🩻🩻 gridState: ', gridState);
-        // console.log('🩻🩻🩻🩻 playerOneStartingPosition: ', playerOneStartingPosition);
-        // console.log('🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻🩻');
-        // console.log(' ');
     }, [
         alienIndexes,
         numRowsCols.cols,
-        // numRowsCols.rows,
         firstIndexOfFirstRowThatAliensAreIn,
-        // playerOneIndex,
-        // moveInvadersLeft,
         rowLength,
-        // setMoveInvadersLeft,
-        // playerOneStartingPosition,
         gridSquares,
         squareWidth,
         squareHeight,
-        // gridState,
         deadAliens,
+        setDeadAliens,
         deadGridSquare,
         alienLocation,
     ]);
@@ -264,7 +160,7 @@ const About = () => {
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [alienIndexes, moveInvaders, playerOneIndex]);
+    }, [alienIndexes, moveInvaders]);
 
     useEffect(() => {
         const readyPlayerOne = (event: KeyboardEvent) => {
@@ -293,7 +189,12 @@ const About = () => {
         return () => {
             document.removeEventListener('keydown', readyPlayerOne);
         };
-    }, [numRowsCols.cols, playerOneIndex, squares.length, numberOfSquaresInARowThatWontHaveAnAlien, moveInvaders]);
+    }, [
+        numRowsCols.cols,
+        playerOneIndex,
+        squares.length,
+        moveInvaders,
+    ]);
 
     return (
         <motion.section
