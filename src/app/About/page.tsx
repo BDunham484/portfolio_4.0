@@ -39,6 +39,7 @@ const About = () => {
     const [playerOneIndex, setPlayerOneIndex] = useState<number>(playerOneStartingPosition);
     const playerOneIndexRef = useRef<number>(playerOneStartingPosition);
     const moveAliensIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const runGridIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
     const [gridState, setGridState] = useState<JSX.Element[]>(squares);
     const [laserShots, setLaserShots] = useState<number[]>([]);
@@ -83,7 +84,7 @@ const About = () => {
 
         const interval = setInterval(() => {
             laserMotion();
-        }, 1000);
+        }, 100);
 
         return () => clearInterval(interval);
     }, [
@@ -114,6 +115,13 @@ const About = () => {
         if (moveAliensIntervalRef.current) {
             clearInterval(moveAliensIntervalRef.current);
             moveAliensIntervalRef.current = null;
+        }
+    }, []);
+
+    const clearGridInterval = useCallback(() => {
+        if (runGridIntervalRef.current) {
+            clearInterval(runGridIntervalRef.current);
+            runGridIntervalRef.current = null;
         }
     }, []);
 
@@ -194,6 +202,105 @@ const About = () => {
             return newDeadAliens;
         });
 
+        // setGridState((prevState) => {
+        //     let newState: JSX.Element[] = [...prevState];
+
+        //     newState = newState.map((square, index) => {
+        //         if (laserShots.includes(index) && alienLocation.includes(index) && !deadAliens.includes(index)) {
+        //             // Hit alien
+        //             const laserIndex = laserShots?.indexOf(index);
+        //             if (laserIndex > -1) {
+        //                 laserShotsRef.current = index;
+        //             }
+        //             // laserShotsRef.current = laserShotsRef.current.filter((shot) => shot !== index);
+        //             // deadAliensRef.current = [...deadAliensRef.current, index];
+        //             hitAlienRef.current = index;
+        //             return (
+        //                 <div
+        //                     key={'hitAlien' + index}
+        //                     className={deadGridSquare}
+        //                     style={{
+        //                         width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', display: 'flex',
+        //                         alignItems: 'flex-start',
+        //                         justifyContent: 'center',
+        //                         fontSize: '60px',
+        //                     }}
+        //                 >
+        //                     💥
+        //                 </div>
+        //             );
+        //         } else if (alienLocation.includes(index)) {
+        //             return (
+        //                 <div
+        //                     key={'alien' + index}
+        //                     className={gridSquares}
+        //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+        //                     onClick={() => setDeadAliens((prev) => [...prev, index])}
+        //                 >
+        //                     <span style={{
+        //                         display: 'flex',
+        //                         alignItems: 'center',
+        //                         justifyContent: 'center',
+        //                         fontSize: '30px',
+        //                         // }}>{index}</span>
+        //                     }}>👾</span>
+        //                 </div>
+        //             );
+        //         } else if (deadAliens.includes(index)) {
+        //             return (
+        //                 <div
+        //                     key={'deadAlien' + index}
+        //                     className={deadGridSquare}
+        //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+        //                 />
+        //             );
+        //         } else if (laserShots.includes(index)) {
+        //             return (
+        //                 <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
+        //                     <span style={{
+        //                         display: 'flex',
+        //                         alignItems: 'center',
+        //                         justifyContent: 'center',
+        //                         fontSize: '30px',
+        //                         color: '#39FF14',
+        //                     }}>{'|'}</span>
+        //                 </div>
+        //             );
+        //         } else {
+        //             return (
+        //                 // <div
+        //                 //     key={'empty' + index}
+        //                 //     className={gridSquares}
+        //                 //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+        //                 // >{index}</div>
+        //                 <div
+        //                     key={'empty' + index}
+        //                     className={gridSquares}
+        //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+        //                 />
+        //             );
+        //         }
+        //     });
+
+        //     return newState;
+        // });
+    }, [
+        alienIndexes,
+        numRowsCols.cols,
+        firstIndexOfFirstRowThatAliensAreIn,
+        rowLength,
+        // gridSquares,
+        // squareWidth,
+        // squareHeight,
+        // deadAliens,
+        setDeadAliens,
+        // deadGridSquare,
+        alienLocation,
+        clearAlienInterval,
+        // laserShots,
+    ]);
+
+    const runGrid = useCallback(() => {
         setGridState((prevState) => {
             let newState: JSX.Element[] = [...prevState];
 
@@ -234,7 +341,7 @@ const About = () => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 fontSize: '30px',
-                            // }}>{index}</span>
+                                // }}>{index}</span>
                             }}>👾</span>
                         </div>
                     );
@@ -277,25 +384,22 @@ const About = () => {
             return newState;
         });
     }, [
-        alienIndexes,
-        numRowsCols.cols,
-        firstIndexOfFirstRowThatAliensAreIn,
-        rowLength,
+        alienLocation,
+        laserShots,
+        deadAliens,
+        setDeadAliens,
         gridSquares,
         squareWidth,
         squareHeight,
-        deadAliens,
-        setDeadAliens,
         deadGridSquare,
-        alienLocation,
-        clearAlienInterval,
-        laserShots,
     ]);
 
     const moveInvadersRef = useRef(moveInvaders);
+    const runGridRef = useRef(runGrid);
     useEffect(() => {
         moveInvadersRef.current = moveInvaders;
-    }, [moveInvaders]);
+        runGridRef.current = runGrid;
+    }, [moveInvaders, runGrid]);
 
     const startAlienInterval = useCallback(() => {
         if (moveAliensIntervalRef.current) return;
@@ -304,6 +408,15 @@ const About = () => {
             moveInvadersRef.current();
             // moveInvaders();
         }, 1000);
+    }, []);
+
+    const startGridInterval = useCallback(() => {
+        if (runGridIntervalRef.current) return;
+
+        runGridIntervalRef.current = setInterval(() => {
+            runGridRef.current();
+            // runGrid();
+        }, 100);
     }, []);
 
     // useEffect(() => {
@@ -337,12 +450,14 @@ const About = () => {
                     break;
                 case 'ArrowDown':
                     startAlienInterval();
+                    startGridInterval();
                     break;
                 case 'ArrowUp':
                     shootLaser();
                     break;
                 case 'End':
                     clearAlienInterval();
+                    clearGridInterval();
                     break;
                 default:
                     break;
@@ -361,6 +476,8 @@ const About = () => {
         startAlienInterval,
         clearAlienInterval,
         shootLaser,
+        startGridInterval,
+        clearGridInterval,
     ]);
 
     return (
