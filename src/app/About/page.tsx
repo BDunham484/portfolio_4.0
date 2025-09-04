@@ -56,24 +56,10 @@ const About = () => {
 
         setLaserShots((prevLaserShots) => {
             const removeIndex = prevLaserShots.indexOf(laserShotsRef.current);
-            console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
-            console.log('🕹️🕹️🕹️🕹️ prevLaserShots: ', prevLaserShots);
-            console.log('🕹️🕹️🕹️🕹️ laserShotsRef.current: ', laserShotsRef.current);
-            console.log('🕹️🕹️🕹️🕹️ removeIndex: ', removeIndex);
             let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.filter((shot) => shot !== laserShotsRef.current)];
-            // let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.slice(removeIndex, removeIndex + 1)];
-            // let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.slice(laserShotsRef.current, laserShotsRef.current + 1)];
-            console.log('🕹️🕹️🕹️🕹️ newLaserShots: ', newLaserShots);
-            console.log('🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️🕹️');
-            console.log(' ');
 
             /** Move all current laser shots forward */
-            // newLaserShots = newLaserShots.map((laserShot) => laserShot - numRowsCols.cols);
             newLaserShots = newLaserShots.map((laserShot) => laserShot - numRowsCols.cols).filter((laserShot) => laserShot >= 0);
-            console.log('🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩');
-            console.log('🧩🧩🧩🧩 newLaserShots: ', newLaserShots);
-            console.log('🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩🧩');
-            console.log(' ');
 
             return newLaserShots;
         });
@@ -143,20 +129,37 @@ const About = () => {
                     /** If moving left and not at the left edge of the viewport, keep moving left. */
                 } else if (!leftEdge && movingLeft.current) {
                     downShift.current = false;
-                    return alienIndexValue - 1;
+                    // changelog-start
+                    return alienIndexValue >= 0 ? alienIndexValue - 1 : alienIndexValue;
+                    // return alienIndexValue - 1;
+                    // changelog-end
                     /** If at the left edge and currently moving left, move down and change direction. */
                 } else if (leftEdge && movingLeft.current) {
                     if (index === 0 && alienIndexValue === numRowsCols.cols * leftDownShifts.current) {
+                        // changelog-start
+                        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+                        console.log('💀💀💀💀 alienIndexValue: ', alienIndexValue);
+                        console.log('💀💀💀💀 numRowsCols.cols: ', numRowsCols.cols);
+                        console.log('💀💀💀💀 numRowsCols.leftDownShifts.current: ', leftDownShifts.current);
+                        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+                        console.log(' ');
+                        // changelog-end
                         leftDownShifts.current += 2;
                         movingLeft.current = false;
                     }
                     downShift.current = true;
 
-                    return (alienIndexValue + numRowsCols.cols);
+                    // changelog-start
+                    return alienIndexValue >= 0 ? (alienIndexValue + numRowsCols.cols) : alienIndexValue;
+                    // return (alienIndexValue + numRowsCols.cols);
+                    // changelog-end
                     /** If moving right and not at the right edge, keep moving right. */
                 } else if (!rightEdge && !movingLeft.current) {
                     downShift.current = false;
-                    return alienIndexValue + 1;
+                    // changelog-start
+                    return alienIndexValue >= 0 ? alienIndexValue + 1 : alienIndexValue;
+                    // return alienIndexValue + 1;
+                    // changelog-end
                     /** If moving right and at the right edge, move down and change direction. */
                 } else if (rightEdge && !movingLeft.current) {
                     if (index === alienIndexes.length - 1 && alienIndexValue === ((numRowsCols.cols * rightDownShifts.current) - 1)) {
@@ -165,7 +168,10 @@ const About = () => {
                     }
                     downShift.current = true;
 
-                    return (alienIndexValue + numRowsCols.cols);
+                    // changelog-start
+                    return alienIndexValue >= 0 ? (alienIndexValue + numRowsCols.cols) : alienIndexValue;
+                    // return (alienIndexValue + numRowsCols.cols);
+                    // changelog-end
                 }
                 downShift.current = false;
 
@@ -176,128 +182,30 @@ const About = () => {
         });
 
         /** Update deadAlien indexes as well. */
-        setDeadAliens((prevDeadAliens) => {
-            console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
-            console.log('💀💀💀💀 prevDeadAliens: ', prevDeadAliens);
-            console.log('💀💀💀💀 deadAliensRef.current: ', deadAliensRef.current);
-            console.log('💀💀💀💀 deadAliensRef.current.filter((deadAlien) => !prevDeadAliens.includes(deadAlien)): ', deadAliensRef.current.filter((deadAlien) => !prevDeadAliens.includes(deadAlien)));
-            let newDeadAliens = hitAlienRef.current < 0 ? [...prevDeadAliens] : [...prevDeadAliens, hitAlienRef.current];
-            // let newDeadAliens = [...prevDeadAliens, ...deadAliensRef.current.filter((deadAlien) => !prevDeadAliens.includes(deadAlien))];
-            console.log('💀💀💀💀 newDeadAliens: ', newDeadAliens);
-            console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
-            console.log(' ');
-
-            newDeadAliens = newDeadAliens.map((deadAlienIndex) => {
-                if (downShift.current) {
-                    return deadAlienIndex + numRowsCols.cols;
-                } else if (movingLeft.current) {
-                    return deadAlienIndex - 1;
-                } else {
-                    return deadAlienIndex + 1;
-                }
-            });
-
-            hitAlienRef.current = -1;
-
-            return newDeadAliens;
-        });
-
-        // setGridState((prevState) => {
-        //     let newState: JSX.Element[] = [...prevState];
-
-        //     newState = newState.map((square, index) => {
-        //         if (laserShots.includes(index) && alienLocation.includes(index) && !deadAliens.includes(index)) {
-        //             // Hit alien
-        //             const laserIndex = laserShots?.indexOf(index);
-        //             if (laserIndex > -1) {
-        //                 laserShotsRef.current = index;
-        //             }
-        //             // laserShotsRef.current = laserShotsRef.current.filter((shot) => shot !== index);
-        //             // deadAliensRef.current = [...deadAliensRef.current, index];
-        //             hitAlienRef.current = index;
-        //             return (
-        //                 <div
-        //                     key={'hitAlien' + index}
-        //                     className={deadGridSquare}
-        //                     style={{
-        //                         width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', display: 'flex',
-        //                         alignItems: 'flex-start',
-        //                         justifyContent: 'center',
-        //                         fontSize: '60px',
-        //                     }}
-        //                 >
-        //                     💥
-        //                 </div>
-        //             );
-        //         } else if (alienLocation.includes(index)) {
-        //             return (
-        //                 <div
-        //                     key={'alien' + index}
-        //                     className={gridSquares}
-        //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-        //                     onClick={() => setDeadAliens((prev) => [...prev, index])}
-        //                 >
-        //                     <span style={{
-        //                         display: 'flex',
-        //                         alignItems: 'center',
-        //                         justifyContent: 'center',
-        //                         fontSize: '30px',
-        //                         // }}>{index}</span>
-        //                     }}>👾</span>
-        //                 </div>
-        //             );
-        //         } else if (deadAliens.includes(index)) {
-        //             return (
-        //                 <div
-        //                     key={'deadAlien' + index}
-        //                     className={deadGridSquare}
-        //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-        //                 />
-        //             );
-        //         } else if (laserShots.includes(index)) {
-        //             return (
-        //                 <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
-        //                     <span style={{
-        //                         display: 'flex',
-        //                         alignItems: 'center',
-        //                         justifyContent: 'center',
-        //                         fontSize: '30px',
-        //                         color: '#39FF14',
-        //                     }}>{'|'}</span>
-        //                 </div>
-        //             );
+        // setDeadAliens((prevDeadAliens) => {
+        //     let newDeadAliens = hitAlienRef.current < 0 ? [...prevDeadAliens] : [...prevDeadAliens, hitAlienRef.current];
+        //     newDeadAliens = newDeadAliens.map((deadAlienIndex) => {
+        //         if (downShift.current) {
+        //             return deadAlienIndex + numRowsCols.cols;
+        //         } else if (movingLeft.current) {
+        //             return deadAlienIndex - 1;
         //         } else {
-        //             return (
-        //                 // <div
-        //                 //     key={'empty' + index}
-        //                 //     className={gridSquares}
-        //                 //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-        //                 // >{index}</div>
-        //                 <div
-        //                     key={'empty' + index}
-        //                     className={gridSquares}
-        //                     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-        //                 />
-        //             );
+        //             return deadAlienIndex + 1;
         //         }
         //     });
 
-        //     return newState;
+        //     hitAlienRef.current = -1;
+
+        //     return newDeadAliens;
         // });
     }, [
         alienIndexes,
         numRowsCols.cols,
         firstIndexOfFirstRowThatAliensAreIn,
         rowLength,
-        // gridSquares,
-        // squareWidth,
-        // squareHeight,
-        // deadAliens,
-        setDeadAliens,
-        // deadGridSquare,
+        // setDeadAliens,
         alienLocation,
         clearAlienInterval,
-        // laserShots,
     ]);
 
     const runGrid = useCallback(() => {
@@ -305,19 +213,21 @@ const About = () => {
             let newState: JSX.Element[] = [...prevState];
 
             newState = newState.map((square, index) => {
-                if (laserShots.includes(index) && alienLocation.includes(index) && !deadAliens.includes(index)) {
+                if (laserShots.includes(index) && alienLocation.includes(index)) {
+                    /** When hit, replace alien location index value with -1 */
+                    setAlienLocation(prevState => {
+                        return prevState.map((alienIdx) => alienIdx === index ? -1 : alienIdx);
+                    });
                     // Hit alien
                     const laserIndex = laserShots?.indexOf(index);
                     if (laserIndex > -1) {
                         laserShotsRef.current = index;
                     }
-                    // laserShotsRef.current = laserShotsRef.current.filter((shot) => shot !== index);
-                    // deadAliensRef.current = [...deadAliensRef.current, index];
+
                     hitAlienRef.current = index;
                     return (
                         <div
                             key={'hitAlien' + index}
-                            className={deadGridSquare}
                             style={{
                                 width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', display: 'flex',
                                 alignItems: 'flex-start',
@@ -327,31 +237,6 @@ const About = () => {
                         >
                             💥
                         </div>
-                    );
-                } else if (alienLocation.includes(index)) {
-                    return (
-                        <div
-                            key={'alien' + index}
-                            className={gridSquares}
-                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                            onClick={() => setDeadAliens((prev) => [...prev, index])}
-                        >
-                            <span style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '30px',
-                                // }}>{index}</span>
-                            }}>👾</span>
-                        </div>
-                    );
-                } else if (deadAliens.includes(index)) {
-                    return (
-                        <div
-                            key={'deadAlien' + index}
-                            className={deadGridSquare}
-                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        />
                     );
                 } else if (laserShots.includes(index)) {
                     return (
@@ -365,17 +250,41 @@ const About = () => {
                             }}>{'|'}</span>
                         </div>
                     );
+                } else if (alienLocation.includes(index)) {
+                    return (
+                        <div
+                            key={'alien' + index}
+                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                            onClick={() => setDeadAliens((prev) => [...prev, index])}
+                        >
+                            <span style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '30px',
+                            }}>
+                                {/* {index} */}
+                                👾
+                            </span>
+                        </div>
+                    );
                 } else {
                     return (
                         // <div
                         //     key={'empty' + index}
-                        //     className={gridSquares}
-                        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        // >{index}</div>
+                        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal'}}
+                        // >
+                        //     {index}
+                        // </div>
                         <div
                             key={'empty' + index}
-                            className={gridSquares}
-                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                            style={{
+                                width: squareWidth,
+                                height: squareHeight,
+                                margin: 0,
+                                padding: 0,
+                                boxSizing: 'border-box',
+                            }}
                         />
                     );
                 }
@@ -386,12 +295,12 @@ const About = () => {
     }, [
         alienLocation,
         laserShots,
-        deadAliens,
+        // deadAliens,
         setDeadAliens,
-        gridSquares,
+        // gridSquares,
         squareWidth,
         squareHeight,
-        deadGridSquare,
+        // deadGridSquare,
     ]);
 
     const moveInvadersRef = useRef(moveInvaders);
@@ -418,17 +327,6 @@ const About = () => {
             // runGrid();
         }, 100);
     }, []);
-
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         moveInvaders();
-    //     }, 1000);
-
-    //     return () => clearInterval(interval);
-    // }, [
-    //     alienIndexes,
-    //     moveInvaders,
-    // ]);
 
     /** Player keyboard controls */
     useEffect(() => {
@@ -509,13 +407,11 @@ const About = () => {
                     return (
                         <div key={'square-' + square.key} style={{
                             display: 'flex',
+                            width: squareWidth,
+                            height: squareHeight,
                         }}>
-                            {/* <div key={'square-' + square.key} style={{ display: 'inline-block' }}> */}
-                            {deadAliens.includes(index) ? (
-                                <div style={{ width: squareWidth, height: squareHeight, background: 'transparent' }} />
-                            ) : square}
+                            {square}
                         </div>
-
                     );
                 })}
             </div>
