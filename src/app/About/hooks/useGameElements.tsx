@@ -1,3 +1,4 @@
+
 interface IProps {
     setAlienLocation: React.Dispatch<React.SetStateAction<number[]>>;
     // index: number;
@@ -77,7 +78,8 @@ export const useGameElements = ({
                 }}
             >
                 {/* {index} */}
-                👾
+                {/* 👾 */}
+                <reactInvaderSVG />
             </span>
         </div>
     );
