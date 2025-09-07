@@ -44,7 +44,7 @@ const About = () => {
     const runGridIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
     const [gridState, setGridState] = useState<JSX.Element[]>(squares);
-    const [laserShots, setLaserShots] = useState<number[]>([]);
+    const [laserBlasts, setLaserBlasts] = useState<number[]>([]);
     // const deadAliensRef = useRef<number[]>(deadAliens);
     const hitAlienRef = useRef<number>(-1);
     const laserShotsRef = useRef<number>(-1);
@@ -53,31 +53,32 @@ const About = () => {
         setAlienLocation,
         squareWidth,
         squareHeight,
-        laserShots,
+        laserBlasts,
         laserShotsRef,
         hitAlienRef,
     });
 
     const shootLaser = useCallback(() => {
-        setLaserShots((prevLaserShots) => [...prevLaserShots, playerOneIndexRef.current - numRowsCols.cols]);
+        setLaserBlasts((prevLaserShots) => [...prevLaserShots, playerOneIndexRef.current - numRowsCols.cols]);
     }, [numRowsCols.cols]);
 
     const laserMotion = useCallback(() => {
-        if (!laserShots || laserShots.length === 0) return;
+        if (!laserBlasts || laserBlasts.length === 0) return;
 
-        setLaserShots((prevLaserShots) => {
-            const removeIndex = prevLaserShots.indexOf(laserShotsRef.current);
-            let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.filter((shot) => shot !== laserShotsRef.current)];
+        setLaserBlasts((prevLaserShots) => {
+            // const removeIndex = prevLaserShots.indexOf(laserShotsRef.current);
+            let newLaserShots = [...prevLaserShots];
+            // let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.filter((shot) => shot !== laserShotsRef.current)];
 
             /** Move all current laser shots forward */
             newLaserShots = newLaserShots.map((laserShot) => laserShot - numRowsCols.cols).filter((laserShot) => laserShot >= 0);
 
             return newLaserShots;
         });
-    }, [laserShots, numRowsCols.cols]);
+    }, [laserBlasts, numRowsCols.cols]);
 
     useEffect(() => {
-        if (!laserShots || laserShots.length === 0) return;
+        if (!laserBlasts || laserBlasts.length === 0) return;
 
         const interval = setInterval(() => {
             laserMotion();
@@ -85,7 +86,7 @@ const About = () => {
 
         return () => clearInterval(interval);
     }, [
-        laserShots,
+        laserBlasts,
         laserMotion,
     ]);
 
@@ -195,11 +196,18 @@ const About = () => {
     const runGrid = useCallback(() => {
         setGridState((prevState) => {
             let tempGridState: JSX.Element[] = [...prevState];
+            // Handle impacts.
+            const impacts = laserBlasts.filter(laser => alienLocation.includes(laser));
+            if (impacts.length > 0) {
+                setAlienLocation(prevState => prevState.map((alien) => impacts.includes(alien) ? -1 : alien));
+                setLaserBlasts(prevState => prevState.filter(laser => !impacts.includes(laser)));
+            }
 
             tempGridState = tempGridState.map((square, index) => {
-                if (laserShots.includes(index) && alienLocation.includes(index)) {
+                if (impacts.includes(index)) {
+                // if (laserBlasts.includes(index) && alienLocation.includes(index)) {
                     return createImpactElement(index);
-                } else if (laserShots.includes(index)) {
+                } else if (laserBlasts.includes(index)) {
                     return createLaserBlast(index);
                 } else if (alienLocation.includes(index)) {
                     return createAlienElement(index);
@@ -212,7 +220,7 @@ const About = () => {
         });
     }, [
         alienLocation,
-        laserShots,
+        laserBlasts,
         createImpactElement,
         createLaserBlast,
         createAlienElement,

@@ -3,7 +3,7 @@ interface IProps {
     // index: number;
     squareWidth: number;
     squareHeight: number;
-    laserShots: number[];
+    laserBlasts: number[];
     laserShotsRef: React.MutableRefObject<number | null>;
     hitAlienRef: React.MutableRefObject<number | null>;
 }
@@ -13,20 +13,20 @@ export const useGameElements = ({
     // index,
     squareWidth,
     squareHeight,
-    laserShots,
+    laserBlasts,
     laserShotsRef,
     hitAlienRef,
 }: IProps) => {
     const createImpactElement = (index: number) => {
         /** When hit, replace alien location index value with -1 */
-        setAlienLocation(prevState => {
-            return prevState.map((alienIdx) => alienIdx === index ? -1 : alienIdx);
-        });
+        // setAlienLocation(prevState => {
+        //     return prevState.map((alienIdx) => alienIdx === index ? -1 : alienIdx);
+        // });
         // Hit alien
-        const laserIndex = laserShots?.indexOf(index);
-        if (laserIndex > -1) {
-            laserShotsRef.current = index;
-        }
+        // const laserIndex = laserBlasts?.indexOf(index);
+        // if (laserIndex > -1) {
+        //     laserShotsRef.current = index;
+        // }
 
         hitAlienRef.current = index;
         return (
@@ -76,29 +76,29 @@ export const useGameElements = ({
                     fontSize: '30px',
                 }}
             >
-                {index}
-                {/* 👾 */}
+                {/* {index} */}
+                👾
             </span>
         </div>
     );
 
     const createTheInfiniteVoidOfSpaceElement = (index: number) => (
-        <div
-            key={'empty' + index}
-            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
-        >
-            {index}
-        </div>
         // <div
         //     key={'empty' + index}
-        //     style={{
-        //         width: squareWidth,
-        //         height: squareHeight,
-        //         margin: 0,
-        //         padding: 0,
-        //         boxSizing: 'border-box',
-        //     }}
-        // />
+        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
+        // >
+        //     {index}
+        // </div>
+        <div
+            key={'empty' + index}
+            style={{
+                width: squareWidth,
+                height: squareHeight,
+                margin: 0,
+                padding: 0,
+                boxSizing: 'border-box',
+            }}
+        />
     );
 
     return {
