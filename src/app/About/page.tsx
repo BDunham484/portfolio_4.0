@@ -4,6 +4,7 @@ import { JSX, useCallback, useEffect, useRef, useState } from 'react';
 import { useSpaceInvaders } from '../../context/SpaceInvadersContext';
 import { useSectionInView } from '../../hooks/useSectionInView';
 import styles from './About.module.css';
+import { useGameElements } from './hooks/useGameElements';
 
 const About = () => {
     const {
@@ -47,6 +48,15 @@ const About = () => {
     // const deadAliensRef = useRef<number[]>(deadAliens);
     const hitAlienRef = useRef<number>(-1);
     const laserShotsRef = useRef<number>(-1);
+
+    const { createImpactElement, createLaserBlast, createAlienElement, createTheInfiniteVoidOfSpaceElement } = useGameElements({
+        setAlienLocation,
+        squareWidth,
+        squareHeight,
+        laserShots,
+        laserShotsRef,
+        hitAlienRef,
+    });
 
     const shootLaser = useCallback(() => {
         setLaserShots((prevLaserShots) => [...prevLaserShots, playerOneIndexRef.current - numRowsCols.cols]);
@@ -188,79 +198,13 @@ const About = () => {
 
             tempGridState = tempGridState.map((square, index) => {
                 if (laserShots.includes(index) && alienLocation.includes(index)) {
-                    /** When hit, replace alien location index value with -1 */
-                    setAlienLocation(prevState => {
-                        return prevState.map((alienIdx) => alienIdx === index ? -1 : alienIdx);
-                    });
-                    // Hit alien
-                    const laserIndex = laserShots?.indexOf(index);
-                    if (laserIndex > -1) {
-                        laserShotsRef.current = index;
-                    }
-
-                    hitAlienRef.current = index;
-                    return (
-                        <div
-                            key={'hitAlien' + index}
-                            style={{
-                                width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', display: 'flex',
-                                alignItems: 'flex-start',
-                                justifyContent: 'center',
-                                fontSize: '60px',
-                            }}
-                        >
-                            💥
-                        </div>
-                    );
+                    return createImpactElement(index);
                 } else if (laserShots.includes(index)) {
-                    return (
-                        <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
-                            <span style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '30px',
-                                color: '#39FF14',
-                            }}>{'|'}</span>
-                        </div>
-                    );
+                    return createLaserBlast(index);
                 } else if (alienLocation.includes(index)) {
-                    return (
-                        <div
-                            key={'alien' + index}
-                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                        // onClick={() => setDeadAliens((prev) => [...prev, index])}
-                        >
-                            <span style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontSize: '30px',
-                            }}>
-                                {index}
-                                {/* 👾 */}
-                            </span>
-                        </div>
-                    );
+                    return createAlienElement(index);
                 } else {
-                    return (
-                        <div
-                            key={'empty' + index}
-                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
-                        >
-                            {index}
-                        </div>
-                        // <div
-                        //     key={'empty' + index}
-                        //     style={{
-                        //         width: squareWidth,
-                        //         height: squareHeight,
-                        //         margin: 0,
-                        //         padding: 0,
-                        //         boxSizing: 'border-box',
-                        //     }}
-                        // />
-                    );
+                    return createTheInfiniteVoidOfSpaceElement(index);
                 }
             });
 
@@ -269,12 +213,10 @@ const About = () => {
     }, [
         alienLocation,
         laserShots,
-        // deadAliens,
-        // setDeadAliens,
-        // gridSquares,
-        squareWidth,
-        squareHeight,
-        // deadGridSquare,
+        createImpactElement,
+        createLaserBlast,
+        createAlienElement,
+        createTheInfiniteVoidOfSpaceElement,
     ]);
 
     const moveInvadersRef = useRef(moveInvaders);
