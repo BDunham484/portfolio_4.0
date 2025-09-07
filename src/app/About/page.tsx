@@ -14,8 +14,8 @@ const About = () => {
         rowLength,
         playerOneStartingPosition,
         squares,
-        deadAliens,
-        setDeadAliens,
+        // deadAliens,
+        // setDeadAliens,
         squareWidth,
         squareHeight,
     } = useSpaceInvaders();
@@ -28,6 +28,7 @@ const About = () => {
     const leftDownShifts = useRef<number>(1);
     const numOfRowsOfAliens = 5;
     const rightDownShifts = useRef<number>(numOfRowsOfAliens + 2);
+    const alienIndexCounter = useRef<number>(0);
 
     const {
         gridSquares,
@@ -43,7 +44,7 @@ const About = () => {
     const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
     const [gridState, setGridState] = useState<JSX.Element[]>(squares);
     const [laserShots, setLaserShots] = useState<number[]>([]);
-    const deadAliensRef = useRef<number[]>(deadAliens);
+    // const deadAliensRef = useRef<number[]>(deadAliens);
     const hitAlienRef = useRef<number>(-1);
     const laserShotsRef = useRef<number>(-1);
 
@@ -120,99 +121,72 @@ const About = () => {
         }
 
         setAlienLocation(prevAlienLocation => {
-            let newAlienIndexes = [...prevAlienLocation];
+            let tempAlienIndexes = [...prevAlienLocation];
 
-            newAlienIndexes = newAlienIndexes.map((alienIndexValue, index, thisAliensArray) => {
+            tempAlienIndexes = tempAlienIndexes.map((alienIndexValue, index, thisAliensArray) => {
                 if (alienIndexValue === playerOneIndexRef.current) {
                     // Game over
                     clearAlienInterval();
                     /** If moving left and not at the left edge of the viewport, keep moving left. */
                 } else if (!leftEdge && movingLeft.current) {
                     downShift.current = false;
-                    // changelog-start
+                    // If not a hit alien (-1), move alien left.
                     return alienIndexValue >= 0 ? alienIndexValue - 1 : alienIndexValue;
-                    // return alienIndexValue - 1;
-                    // changelog-end
                     /** If at the left edge and currently moving left, move down and change direction. */
                 } else if (leftEdge && movingLeft.current) {
-                    if (index === 0 && alienIndexValue === numRowsCols.cols * leftDownShifts.current) {
-                        // changelog-start
-                        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
-                        console.log('💀💀💀💀 alienIndexValue: ', alienIndexValue);
-                        console.log('💀💀💀💀 numRowsCols.cols: ', numRowsCols.cols);
-                        console.log('💀💀💀💀 numRowsCols.leftDownShifts.current: ', leftDownShifts.current);
-                        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
-                        console.log(' ');
-                        // changelog-end
+                    // If the full formation of aliens have moved down,
+                    // increase the down shift count and move right.
+                    if (alienIndexCounter.current === alienIndexes.length * 2) {
                         leftDownShifts.current += 2;
                         movingLeft.current = false;
+                        alienIndexCounter.current = 0;
                     }
+                    // Set downshift status.
                     downShift.current = true;
+                    alienIndexCounter.current += 1;
 
-                    // changelog-start
+                    // Downshift the alien location by one row.
                     return alienIndexValue >= 0 ? (alienIndexValue + numRowsCols.cols) : alienIndexValue;
-                    // return (alienIndexValue + numRowsCols.cols);
-                    // changelog-end
                     /** If moving right and not at the right edge, keep moving right. */
                 } else if (!rightEdge && !movingLeft.current) {
                     downShift.current = false;
-                    // changelog-start
+                    // If not a hit alien (-1), move alien right.
                     return alienIndexValue >= 0 ? alienIndexValue + 1 : alienIndexValue;
-                    // return alienIndexValue + 1;
-                    // changelog-end
                     /** If moving right and at the right edge, move down and change direction. */
                 } else if (rightEdge && !movingLeft.current) {
-                    if (index === alienIndexes.length - 1 && alienIndexValue === ((numRowsCols.cols * rightDownShifts.current) - 1)) {
+                    if (alienIndexCounter.current === alienIndexes.length * 2) {
                         rightDownShifts.current += 2;
                         movingLeft.current = true;
+                        alienIndexCounter.current = 0;
                     }
+                    // Set downshift status.
                     downShift.current = true;
+                    alienIndexCounter.current += 1;
 
-                    // changelog-start
+                    // Downshift the alien location by one row.
                     return alienIndexValue >= 0 ? (alienIndexValue + numRowsCols.cols) : alienIndexValue;
-                    // return (alienIndexValue + numRowsCols.cols);
-                    // changelog-end
                 }
                 downShift.current = false;
 
                 return alienIndexValue;
             });
 
-            return newAlienIndexes;
+            return tempAlienIndexes;
         });
-
-        /** Update deadAlien indexes as well. */
-        // setDeadAliens((prevDeadAliens) => {
-        //     let newDeadAliens = hitAlienRef.current < 0 ? [...prevDeadAliens] : [...prevDeadAliens, hitAlienRef.current];
-        //     newDeadAliens = newDeadAliens.map((deadAlienIndex) => {
-        //         if (downShift.current) {
-        //             return deadAlienIndex + numRowsCols.cols;
-        //         } else if (movingLeft.current) {
-        //             return deadAlienIndex - 1;
-        //         } else {
-        //             return deadAlienIndex + 1;
-        //         }
-        //     });
-
-        //     hitAlienRef.current = -1;
-
-        //     return newDeadAliens;
-        // });
     }, [
         alienIndexes,
         numRowsCols.cols,
         firstIndexOfFirstRowThatAliensAreIn,
         rowLength,
-        // setDeadAliens,
         alienLocation,
         clearAlienInterval,
     ]);
 
     const runGrid = useCallback(() => {
         setGridState((prevState) => {
-            let newState: JSX.Element[] = [...prevState];
+            let tempGridState: JSX.Element[] = [...prevState];
 
-            newState = newState.map((square, index) => {
+            tempGridState = tempGridState.map((square, index) => {
                 if (laserShots.includes(index) && alienLocation.includes(index)) {
                     /** When hit, replace alien location index value with -1 */
                     setAlienLocation(prevState => {
@@ -255,7 +229,7 @@ const About = () => {
                         <div
                             key={'alien' + index}
                             style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                            onClick={() => setDeadAliens((prev) => [...prev, index])}
+                        // onClick={() => setDeadAliens((prev) => [...prev, index])}
                         >
                             <span style={{
                                 display: 'flex',
@@ -263,40 +237,40 @@ const About = () => {
                                 justifyContent: 'center',
                                 fontSize: '30px',
                             }}>
-                                {/* {index} */}
-                                👾
+                                {index}
+                                {/* 👾 */}
                             </span>
                         </div>
                     );
                 } else {
                     return (
-                        // <div
-                        //     key={'empty' + index}
-                        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal'}}
-                        // >
-                        //     {index}
-                        // </div>
                         <div
                             key={'empty' + index}
-                            style={{
-                                width: squareWidth,
-                                height: squareHeight,
-                                margin: 0,
-                                padding: 0,
-                                boxSizing: 'border-box',
-                            }}
-                        />
+                            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
+                        >
+                            {index}
+                        </div>
+                        // <div
+                        //     key={'empty' + index}
+                        //     style={{
+                        //         width: squareWidth,
+                        //         height: squareHeight,
+                        //         margin: 0,
+                        //         padding: 0,
+                        //         boxSizing: 'border-box',
+                        //     }}
+                        // />
                     );
                 }
             });
 
-            return newState;
+            return tempGridState;
         });
     }, [
         alienLocation,
         laserShots,
         // deadAliens,
-        setDeadAliens,
+        // setDeadAliens,
         // gridSquares,
         squareWidth,
         squareHeight,
