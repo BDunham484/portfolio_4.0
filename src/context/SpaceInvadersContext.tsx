@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../app/About/About.module.css';
+import ReactInvader from '../app/About/reactInvader';
 
 interface SpaceInvadersContextProps {
     gridRef: React.RefObject<HTMLDivElement | null>;
@@ -105,13 +106,16 @@ export const SpaceInvadersProvider = ({ children }: { children: ReactNode }) => 
                         style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
                         onClick={() => setDeadAliens((prev) => [...prev, index])}
                     >
-                        <span style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontSize: '30px',
-                            // }}>{index}</span>
-                        }}>👾</span>
+                        <span
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '30px',
+                            }}
+                        >
+                            <ReactInvader />
+                        </span>
                     </div>
                 );
             } else {

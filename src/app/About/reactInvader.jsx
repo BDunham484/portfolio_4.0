@@ -1,4 +1,4 @@
-const ReactInvaderSVG = () => (
+const ReactInvader = () => (
   // <!-- const reactInvaderSVG = ({ size - 48, className='' }) => ( -->
   <svg width="48" height="48" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
     {/* <!-- Outer glow effect --> */}
@@ -17,12 +17,13 @@ const ReactInvaderSVG = () => (
     </defs>
 
     {/* <!-- UFO saucer dome (top half) --> */}
-    <ellipse cx="24" cy="20" rx="16" ry="8" fill="url(#saucerGrad)" opacity="0.7" />
+    <ellipse cx="24" cy="20" rx="16" ry="8" fill="url(#saucerGrad)" opacity="0.9" />
+    {/* <ellipse cx="24" cy="20" rx="16" ry="8" fill="url(#saucerGrad)" opacity="0.7" /> */}
 
     {/* <!-- React electron orbits (modified to look like UFO energy rings) --> */}
-    <ellipse cx="24" cy="24" rx="20" ry="8" fill="none" stroke="#61DAFB" strokeWidth="1.5" opacity="0.8" filter="url(#glow)" />
-    <ellipse cx="24" cy="24" rx="20" ry="8" fill="none" stroke="#61DAFB" strokeWidth="1.5" opacity="0.6" transform="rotate(60 24 24)" />
-    <ellipse cx="24" cy="24" rx="20" ry="8" fill="none" stroke="#61DAFB" strokeWidth="1.5" opacity="0.6" transform="rotate(-60 24 24)" />
+    <ellipse cx="24" cy="24" rx="20" ry="8" fill="none" stroke="#61DAFB" strokeWidth="1.5" opacity="0.4" filter="url(#glow)" />
+    <ellipse cx="24" cy="24" rx="20" ry="8" fill="none" stroke="#61DAFB" strokeWidth="1.5" opacity="0.4" transform="rotate(60 24 24)" />
+    <ellipse cx="24" cy="24" rx="20" ry="8" fill="none" stroke="#61DAFB" strokeWidth="1.5" opacity="0.4" transform="rotate(-60 24 24)" />
 
     {/* <!-- UFO lights around the rim --> */}
     <circle cx="8" cy="24" r="1.5" fill="#FFD700" opacity="0.9">
@@ -54,5 +55,5 @@ const ReactInvaderSVG = () => (
   </svg>
 );
 
-export default ReactInvaderSVG;
+export default ReactInvader;
 

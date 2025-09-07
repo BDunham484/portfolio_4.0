@@ -1,5 +1,5 @@
 
-import ReactInvaderSVG from '../reactInvader.jsx';
+import ReactInvader from '../reactInvader.jsx';
 
 interface IProps {
     setAlienLocation: React.Dispatch<React.SetStateAction<number[]>>;
@@ -79,7 +79,7 @@ export const useGameElements = ({
                     fontSize: '30px',
                 }}
             >
-                <ReactInvaderSVG />
+                <ReactInvader />
             </span>
         </div>
     );
