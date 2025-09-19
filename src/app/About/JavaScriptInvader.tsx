@@ -1,7 +1,7 @@
 const JavaScriptInvader = () => (
     <svg
-        width='48'
-        height='48'
+        width={48}
+        height={48}
         viewBox='0 0 48 48'
         xmlns='http://www.w3.org/2000/svg'
     >
@@ -30,12 +30,12 @@ const JavaScriptInvader = () => (
             </radialGradient>
         </defs>
 
-        {/* Engine exhaust glow */}
-        <ellipse cx='24' cy='38' rx='12' ry='8' fill='url(#engineGrad)' opacity='0.7' filter='url(#engineGlow)'>
+        {/* Engine exhaust glow - smaller */}
+        <ellipse cx='24' cy='36' rx='8' ry='4' fill='url(#engineGrad)' opacity='0.7' filter='url(#engineGlow)'>
             <animate attributeName='opacity' values='0.4;0.8;0.4' dur='2s' repeatCount='indefinite' />
-            <animate attributeName='ry' values='8;10;8' dur='2s' repeatCount='indefinite' />
+            <animate attributeName='ry' values='4;5;4' dur='2s' repeatCount='indefinite' />
         </ellipse>
-        <ellipse cx='24' cy='36' rx='8' ry='5' fill='url(#engineGrad)' opacity='0.9'>
+        <ellipse cx='24' cy='34' rx='5' ry='2' fill='url(#engineGrad)' opacity='0.9'>
             <animate attributeName='opacity' values='0.6;1;0.6' dur='1.5s' repeatCount='indefinite' />
         </ellipse>
 
@@ -51,31 +51,31 @@ const JavaScriptInvader = () => (
             <animate attributeName='opacity' values='0.3;1;0.3' dur='1.5s' repeatCount='indefinite' />
         </circle>
 
-        {/* JavaScript logo pentagon shield background */}
-        <polygon points='16,10 32,10 30,22 24,26 18,22' fill='#F7DF1E' filter='url(#logoGlow)' />
+        {/* JavaScript logo pentagon shield background - bigger */}
+        <polygon points='12,8 36,8 34,24 24,30 14,24' fill='#F7DF1E' filter='url(#logoGlow)' />
 
         {/* Large J with glow */}
-        <text x='20' y='21' fontFamily='Arial, sans-serif' fontSize='10' fontWeight='bold' fill='#323330'>
+        <text x='18' y='22' fontFamily='Arial, sans-serif' fontSize='14' fontWeight='bold' fill='#323330'>
             J
             <animate attributeName='fill' values='#323330;#FF6B35;#323330' dur='3s' repeatCount='indefinite' />
         </text>
 
         {/* Large S with glow */}
-        <text x='26' y='21' fontFamily='Arial, sans-serif' fontSize='10' fontWeight='bold' fill='#323330'>
+        <text x='28' y='22' fontFamily='Arial, sans-serif' fontSize='14' fontWeight='bold' fill='#323330'>
             S
             <animate attributeName='fill' values='#323330;#FF6B35;#323330' dur='3s' begin='1.5s' repeatCount='indefinite' />
         </text>
 
         {/* Logo border glow */}
-        <polygon points='16,10 32,10 30,22 24,26 18,22' fill='none' stroke='#FFE135' strokeWidth='1' opacity='0.8'>
+        <polygon points='12,8 36,8 34,24 24,30 14,24' fill='none' stroke='#FFE135' strokeWidth='1' opacity='0.8'>
             <animate attributeName='opacity' values='0.5;1;0.5' dur='4s' repeatCount='indefinite' />
         </polygon>
 
         {/* Small engine details */}
-        <rect x='20' y='26' width='2' height='4' fill='#87CEEB' opacity='0.6' rx='1'>
+        <rect x='20' y='30' width='2' height='2' fill='#87CEEB' opacity='0.6' rx='1'>
             <animate attributeName='opacity' values='0.4;0.8;0.4' dur='1.8s' repeatCount='indefinite' />
         </rect>
-        <rect x='26' y='26' width='2' height='4' fill='#87CEEB' opacity='0.6' rx='1'>
+        <rect x='26' y='30' width='2' height='2' fill='#87CEEB' opacity='0.6' rx='1'>
             <animate attributeName='opacity' values='0.8;0.4;0.8' dur='1.8s' repeatCount='indefinite' />
         </rect>
     </svg>

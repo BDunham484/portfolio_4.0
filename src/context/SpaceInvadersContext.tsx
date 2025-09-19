@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../app/About/About.module.css';
-import JavaScriptInvader from '../app/About/JavaScriptInvader';
+import NodeJsInvader from '../app/About/NodeJSInvader';
 
 interface SpaceInvadersContextProps {
     gridRef: React.RefObject<HTMLDivElement | null>;
@@ -114,7 +114,8 @@ export const SpaceInvadersProvider = ({ children }: { children: ReactNode }) => 
                                 fontSize: '30px',
                             }}
                         >
-                            <JavaScriptInvader />
+                            <NodeJsInvader />
+                            {/* <JavaScriptInvader /> */}
                             {/* <ReactInvader /> */}
                         </span>
                     </div>

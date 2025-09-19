@@ -1,5 +1,5 @@
 
-import JavaScriptInvader from '../JavaScriptInvader';
+import NodeJsInvader from '../NodeJSInvader';
 
 interface IProps {
     setAlienLocation: React.Dispatch<React.SetStateAction<number[]>>;
@@ -79,7 +79,8 @@ export const useGameElements = ({
                     fontSize: '30px',
                 }}
             >
-                <JavaScriptInvader />
+                <NodeJsInvader />
+                {/* <JavaScriptInvader /> */}
                 {/* <ReactInvader /> */}
             </span>
         </div>
