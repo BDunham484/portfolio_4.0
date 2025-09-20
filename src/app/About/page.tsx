@@ -123,9 +123,45 @@ const About = () => {
         }
     }, []);
 
+    const getLeftmostAliveAlien = useCallback((alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
+        const aliveAliens = alienLocation.filter(alien => alien >= 0);
+        if (aliveAliens.length === 0) return -1;
+
+        // Find the leftmost column that has any alive alien.
+        let leftmostColumn = numRowsCols.cols; // Start with max possible column index
+        aliveAliens.forEach(alien => {
+            const col = alien % numRowsCols.cols;
+            if (col < leftmostColumn) {
+                leftmostColumn = col;
+            }
+        });
+
+        return leftmostColumn;
+    }, []);
+
+    const getRightmostAliveAlien = (alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
+        const aliveAliens = alienLocation.filter(alien => alien >= 0);
+        if (aliveAliens.length === 0) return -1;
+
+        // Find the rightmost column that has any alive alien
+        let rightmostCol = -1;
+
+        aliveAliens.forEach(alienIndex => {
+            const col = alienIndex % numRowsCols.cols;
+            if (col > rightmostCol) {
+                rightmostCol = col;
+            }
+        });
+
+        return rightmostCol;
+    };
+
     const moveInvaders = useCallback(() => {
-        const leftEdge = (alienLocation[0] ?? firstIndexOfFirstRowThatAliensAreIn) % numRowsCols.cols === 0;
-        const rightEdge = (alienLocation[alienLocation?.length - 1] ?? rowLength - 1) % numRowsCols.cols === numRowsCols.cols - 1;
+        const leftmostCol = getLeftmostAliveAlien(alienLocation, numRowsCols);
+        const rightmostCol = getRightmostAliveAlien(alienLocation, numRowsCols);
+
+        const leftEdge = leftmostCol === 0;
+        const rightEdge = rightmostCol === numRowsCols.cols - 1;
 
         if (!alienIndexes || alienIndexes.length === 0) {
             return;
@@ -205,7 +241,7 @@ const About = () => {
 
             tempGridState = tempGridState.map((square, index) => {
                 if (impacts.includes(index)) {
-                // if (laserBlasts.includes(index) && alienLocation.includes(index)) {
+                    // if (laserBlasts.includes(index) && alienLocation.includes(index)) {
                     return createImpactElement(index);
                 } else if (laserBlasts.includes(index)) {
                     return createLaserBlast(index);
@@ -229,6 +265,7 @@ const About = () => {
 
     const moveInvadersRef = useRef(moveInvaders);
     const runGridRef = useRef(runGrid);
+
     useEffect(() => {
         moveInvadersRef.current = moveInvaders;
         runGridRef.current = runGrid;

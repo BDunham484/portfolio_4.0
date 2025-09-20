@@ -37,8 +37,8 @@ const NodeJsInvader = () => (
         {/* Main Node.js hexagon - much larger */}
         <polygon points='24,6 34,12 34,24 24,30 14,24 14,12' fill='url(#hexGrad)' stroke='#2D5016' strokeWidth='1.5' filter='url(#greenGlow)' />
 
-        {/* Stylized "N" shape inside hexagon - bigger and flipped */}
-        <polygon points='18,13 20,13 20,21 26,13 28,13 28,23 26,23 26,15 20,23 18,23' fill='#FFFFFF' opacity='0.9'>
+        {/* Stylized "N" shape inside hexagon - properly oriented */}
+        <polygon points='18,23 20,23 20,15 26,23 28,23 28,13 26,13 26,21 20,13 18,13' fill='#FFFFFF' opacity='0.9'>
             <animate attributeName='opacity' values='0.7;1;0.7' dur='2s' repeatCount='indefinite' />
         </polygon>
 
