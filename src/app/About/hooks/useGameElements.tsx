@@ -1,4 +1,7 @@
 
+import ExplosionEffect from '../Explosion';
+import InvaderLaser from '../InvaderLaser';
+import LaserBlast from '../LaserBlast';
 import ReactInvader from '../ReactInvader';
 
 interface IProps {
@@ -33,6 +36,7 @@ export const useGameElements = ({
 
         hitAlienRef.current = index;
         return (
+            // changelog-start
             <div
                 key={'hitAlien' + index}
                 style={{
@@ -42,20 +46,50 @@ export const useGameElements = ({
                     fontSize: '60px',
                 }}
             >
-                💥
+                <ExplosionEffect />
             </div>
+            // <div
+            //     key={'hitAlien' + index}
+            //     style={{
+            //         width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', display: 'flex',
+            //         alignItems: 'flex-start',
+            //         justifyContent: 'center',
+            //         fontSize: '60px',
+            //     }}
+            // >
+            //     💥
+            // </div>
+            // changelog-end
         );
     };
 
     const createLaserBlast = (index: number) => (
         <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
-            <span style={{
+            {/* // changelog-start */}
+            <LaserBlast />
+            {/* <span style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '30px',
                 color: '#39FF14',
-            }}>{'|'}</span>
+            }}>{'|'}</span> */}
+            {/* // changelog-end */}
+        </div>
+    );
+
+    const createInvaderLaserBlast = (index: number) => (
+        <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
+            {/* // changelog-start */}
+            <InvaderLaser />
+            {/* <span style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '30px',
+                color: '#39FF14',
+            }}>{'|'}</span> */}
+            {/* // changelog-end */}
         </div>
     );
 
@@ -108,6 +142,7 @@ export const useGameElements = ({
     return {
         createImpactElement,
         createLaserBlast,
+        createInvaderLaserBlast,
         createAlienElement,
         createTheInfiniteVoidOfSpaceElement,
     };
