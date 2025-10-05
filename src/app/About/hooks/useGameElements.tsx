@@ -2,6 +2,7 @@
 import ExplosionEffect from '../Explosion';
 import InvaderLaser from '../InvaderLaser';
 import LaserBlast from '../LaserBlast';
+import ReactInvader from '../ReactInvader';
 
 interface IProps {
     setAlienLocation: React.Dispatch<React.SetStateAction<number[]>>;
@@ -133,10 +134,10 @@ export const useGameElements = ({
                 }}
             >
                 {/* // changelog-start */}
-                {index}
+                {/* {index} */}
                 {/* <NodeJsInvader /> */}
                 {/* <JavaScriptInvader /> */}
-                {/* <ReactInvader /> */}
+                <ReactInvader />
                 {/* // changelog-end  */}
             </span>
         </div>
@@ -144,22 +145,22 @@ export const useGameElements = ({
 
     const createTheInfiniteVoidOfSpaceElement = (index: number) => (
         // changelog-start **showIndexes**
-        <div
-            key={'empty' + index}
-            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
-        >
-            {index}
-        </div>
         // <div
         //     key={'empty' + index}
-        //     style={{
-        //         width: squareWidth,
-        //         height: squareHeight,
-        //         margin: 0,
-        //         padding: 0,
-        //         boxSizing: 'border-box',
-        //     }}
-        // />
+        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
+        // >
+        //     {index}
+        // </div>
+        <div
+            key={'empty' + index}
+            style={{
+                width: squareWidth,
+                height: squareHeight,
+                margin: 0,
+                padding: 0,
+                boxSizing: 'border-box',
+            }}
+        />
         // changelog-end
     );
 

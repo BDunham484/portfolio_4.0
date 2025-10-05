@@ -1,6 +1,7 @@
 'use client';
 import React, { createContext, ReactNode, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import styles from '../app/About/About.module.css';
+import ReactInvader from '../app/About/ReactInvader';
 
 interface SpaceInvadersContextProps {
     gridRef: React.RefObject<HTMLDivElement | null>;
@@ -114,10 +115,10 @@ export const SpaceInvadersProvider = ({ children }: { children: ReactNode }) => 
                             }}
                         >
                             {/* // changelog-start */}
-                            {index}
+                            {/* {index} */}
                             {/* <NodeJsInvader /> */}
                             {/* <JavaScriptInvader /> */}
-                            {/* <ReactInvader /> */}
+                            <ReactInvader />
                             {/* // changelog-end  */}
                         </span>
                     </div>
@@ -125,18 +126,18 @@ export const SpaceInvadersProvider = ({ children }: { children: ReactNode }) => 
             } else {
                 return (
                     // changelog-start **showIndexes**
-                    <div
-                        key={index}
-                        className={gridSquares}
-                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    >
-                        {index}
-                    </div>
                     // <div
                     //     key={index}
                     //     className={gridSquares}
                     //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
-                    // />
+                    // >
+                    //     {index}
+                    // </div>
+                    <div
+                        key={index}
+                        className={gridSquares}
+                        style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box' }}
+                    />
                     // changelog-end
                 );
             }

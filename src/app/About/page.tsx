@@ -44,6 +44,7 @@ const About = () => {
     const moveAliensIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const runGridIntervalRef = useRef<NodeJS.Timeout | null>(null);
     const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
+    const alienLocationRef = useRef<number[]>(alienIndexes);
     const [gridState, setGridState] = useState<JSX.Element[]>(squares);
     const [laserBlasts, setLaserBlasts] = useState<number[]>([]);
     // const deadAliensRef = useRef<number[]>(deadAliens);
@@ -88,7 +89,6 @@ const About = () => {
         });
     }, [laserBlasts, numRowsCols.cols]);
 
-    // changelog-start
     const getAliensThatCanFire = useCallback((alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
         const aliveAliens = alienLocation.filter(alien => alien >= 0);
         const canFire: number[] = [];
@@ -109,19 +109,11 @@ const About = () => {
             }
         });
 
-        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
-        console.log('💀💀💀💀 aliveAliens: ', aliveAliens);
-        console.log('💀💀💀💀 canFire: ', canFire);
-        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
-        console.log(' ');
-
         return canFire;
     }, []);
-    // changelog-end
 
-    // changelog-start
     const fireAlienLaser = useCallback(() => {
-        const aliensThatCanFire = getAliensThatCanFire(alienLocation, numRowsCols);
+        const aliensThatCanFire = getAliensThatCanFire(alienLocationRef.current, numRowsCols);
 
         if (aliensThatCanFire.length > 0) {
             const randomAlienIndex = aliensThatCanFire[Math.floor(Math.random() * aliensThatCanFire.length)];
@@ -130,19 +122,19 @@ const About = () => {
                 const laserStartPosition = randomAlienIndex + numRowsCols.cols;
 
                 // Only fire if the laser won't immediately hit another alien
-                if (!alienLocation.includes(laserStartPosition)) {
+                if (!alienLocationRef.current.includes(laserStartPosition)) {
                     setAlienLasers(prev => [...prev, laserStartPosition]);
                 }
             }
         }
-    }, [alienLocation, numRowsCols, getAliensThatCanFire]);
+    }, [numRowsCols, getAliensThatCanFire]);
 
     const startAlienFiring = useCallback(() => {
         if (alienFireIntervalRef.current) return;
 
         alienFireIntervalRef.current = setInterval(() => {
             fireAlienLaser();
-        }, 2000 + Math.random() * 1000); // 2-3 seconds random interval
+        }, 2000 + Math.random() * 1000); // Randomize interval between 2-3 seconds
     }, [fireAlienLaser]);
 
     const stopAlienFiring = useCallback(() => {
@@ -189,7 +181,6 @@ const About = () => {
 
         return () => clearInterval(interval);
     }, [alienLasers, moveAlienLasers]);
-    // changelog-end
 
     useEffect(() => {
         if (!laserBlasts || laserBlasts.length === 0) return;
@@ -215,6 +206,11 @@ const About = () => {
             setAlienLocation(alienIndexes);
         }
     }, [alienIndexes, alienLocation.length]);
+
+    // Keep ref synchronized with state
+    useEffect(() => {
+        alienLocationRef.current = alienLocation;
+    }, [alienLocation]);
 
     useEffect(() => {
         if (!playerEngagedRef.current && playerOneStartingPosition !== playerOneIndex) {
@@ -347,7 +343,8 @@ const About = () => {
         setGridState((prevState) => {
             let tempGridState: JSX.Element[] = [...prevState];
             // Handle impacts.
-            const impacts = laserBlasts.filter(laser => alienLocation.includes(laser));
+            const impacts = laserBlasts.filter(laser => alienLocationRef.current.includes(laser));
+            // const impacts = laserBlasts.filter(laser => alienLocation.includes(laser));
             if (impacts.length > 0) {
                 setAlienLocation(prevState => prevState.map((alien) => impacts.includes(alien) ? -1 : alien));
                 setLaserBlasts(prevState => prevState.filter(laser => !impacts.includes(laser)));
