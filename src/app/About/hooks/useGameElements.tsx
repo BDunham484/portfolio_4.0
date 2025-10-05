@@ -2,7 +2,6 @@
 import ExplosionEffect from '../Explosion';
 import InvaderLaser from '../InvaderLaser';
 import LaserBlast from '../LaserBlast';
-import ReactInvader from '../ReactInvader';
 
 interface IProps {
     setAlienLocation: React.Dispatch<React.SetStateAction<number[]>>;
@@ -64,7 +63,19 @@ export const useGameElements = ({
     };
 
     const createLaserBlast = (index: number) => (
-        <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
+        <div
+            key={'laser' + index}
+            style={{
+                // width: squareWidth,
+                // height: squareHeight,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: 0,
+                padding: 0,
+                boxSizing: 'border-box',
+                background: 'transparent',
+            }}>
             {/* // changelog-start */}
             <LaserBlast />
             {/* <span style={{
@@ -79,8 +90,17 @@ export const useGameElements = ({
     );
 
     const createInvaderLaserBlast = (index: number) => (
-        <div key={'laser' + index} style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', background: 'transparent' }}>
-            {/* // changelog-start */}
+        <div
+            key={'laser' + index}
+            style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: 0,
+                padding: 0,
+                boxSizing: 'border-box',
+                background: 'transparent',
+            }}>
             <InvaderLaser />
             {/* <span style={{
                 display: 'flex',
@@ -89,7 +109,6 @@ export const useGameElements = ({
                 fontSize: '30px',
                 color: '#39FF14',
             }}>{'|'}</span> */}
-            {/* // changelog-end */}
         </div>
     );
 
@@ -113,30 +132,35 @@ export const useGameElements = ({
                     fontSize: '30px',
                 }}
             >
+                {/* // changelog-start */}
+                {index}
                 {/* <NodeJsInvader /> */}
                 {/* <JavaScriptInvader /> */}
-                <ReactInvader />
+                {/* <ReactInvader /> */}
+                {/* // changelog-end  */}
             </span>
         </div>
     );
 
     const createTheInfiniteVoidOfSpaceElement = (index: number) => (
-        // <div
-        //     key={'empty' + index}
-        //     style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
-        // >
-        //     {index}
-        // </div>
+        // changelog-start **showIndexes**
         <div
             key={'empty' + index}
-            style={{
-                width: squareWidth,
-                height: squareHeight,
-                margin: 0,
-                padding: 0,
-                boxSizing: 'border-box',
-            }}
-        />
+            style={{ width: squareWidth, height: squareHeight, margin: 0, padding: 0, boxSizing: 'border-box', color: 'teal' }}
+        >
+            {index}
+        </div>
+        // <div
+        //     key={'empty' + index}
+        //     style={{
+        //         width: squareWidth,
+        //         height: squareHeight,
+        //         margin: 0,
+        //         padding: 0,
+        //         boxSizing: 'border-box',
+        //     }}
+        // />
+        // changelog-end
     );
 
     return {

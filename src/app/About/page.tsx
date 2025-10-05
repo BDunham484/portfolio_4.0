@@ -5,6 +5,7 @@ import { useSpaceInvaders } from '../../context/SpaceInvadersContext';
 import { useSectionInView } from '../../hooks/useSectionInView';
 import styles from './About.module.css';
 import { useGameElements } from './hooks/useGameElements';
+import MovieXWingFighter from './XWing';
 
 const About = () => {
     const {
@@ -48,8 +49,18 @@ const About = () => {
     // const deadAliensRef = useRef<number[]>(deadAliens);
     const hitAlienRef = useRef<number>(-1);
     const laserShotsRef = useRef<number>(-1);
+    // changelog-start
+    const [alienLasers, setAlienLasers] = useState<number[]>([]);
+    const alienFireIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    // changelog-end
 
-    const { createImpactElement, createLaserBlast, createAlienElement, createTheInfiniteVoidOfSpaceElement } = useGameElements({
+    const {
+        createImpactElement,
+        createInvaderLaserBlast,
+        createLaserBlast,
+        createAlienElement,
+        createTheInfiniteVoidOfSpaceElement,
+    } = useGameElements({
         setAlienLocation,
         squareWidth,
         squareHeight,
@@ -76,6 +87,109 @@ const About = () => {
             return newLaserShots;
         });
     }, [laserBlasts, numRowsCols.cols]);
+
+    // changelog-start
+    const getAliensThatCanFire = useCallback((alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
+        const aliveAliens = alienLocation.filter(alien => alien >= 0);
+        const canFire: number[] = [];
+
+        aliveAliens.forEach(alienIndex => {
+            const alienRow = Math.floor(alienIndex / numRowsCols.cols);
+            const alienCol = alienIndex % numRowsCols.cols;
+
+            // Check if there's any alien below this one in the same column
+            const hasAlienBelow = aliveAliens.some(otherAlien => {
+                const otherRow = Math.floor(otherAlien / numRowsCols.cols);
+                const otherCol = otherAlien % numRowsCols.cols;
+                return otherCol === alienCol && otherRow > alienRow;
+            });
+
+            if (!hasAlienBelow) {
+                canFire.push(alienIndex);
+            }
+        });
+
+        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+        console.log('💀💀💀💀 aliveAliens: ', aliveAliens);
+        console.log('💀💀💀💀 canFire: ', canFire);
+        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+        console.log(' ');
+
+        return canFire;
+    }, []);
+    // changelog-end
+
+    // changelog-start
+    const fireAlienLaser = useCallback(() => {
+        const aliensThatCanFire = getAliensThatCanFire(alienLocation, numRowsCols);
+
+        if (aliensThatCanFire.length > 0) {
+            const randomAlienIndex = aliensThatCanFire[Math.floor(Math.random() * aliensThatCanFire.length)];
+
+            if (randomAlienIndex) {
+                const laserStartPosition = randomAlienIndex + numRowsCols.cols;
+
+                // Only fire if the laser won't immediately hit another alien
+                if (!alienLocation.includes(laserStartPosition)) {
+                    setAlienLasers(prev => [...prev, laserStartPosition]);
+                }
+            }
+        }
+    }, [alienLocation, numRowsCols, getAliensThatCanFire]);
+
+    const startAlienFiring = useCallback(() => {
+        if (alienFireIntervalRef.current) return;
+
+        alienFireIntervalRef.current = setInterval(() => {
+            fireAlienLaser();
+        }, 2000 + Math.random() * 1000); // 2-3 seconds random interval
+    }, [fireAlienLaser]);
+
+    const stopAlienFiring = useCallback(() => {
+        if (alienFireIntervalRef.current) {
+            clearInterval(alienFireIntervalRef.current);
+            alienFireIntervalRef.current = null;
+        }
+    }, []);
+
+    // const laserMotion = useCallback(() => {
+    //     if (!laserBlasts || laserBlasts.length === 0) return;
+
+    //     setLaserBlasts((prevLaserShots) => {
+    //         // const removeIndex = prevLaserShots.indexOf(laserShotsRef.current);
+    //         let newLaserShots = [...prevLaserShots];
+    //         // let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.filter((shot) => shot !== laserShotsRef.current)];
+
+    //         /** Move all current laser shots forward */
+    //         newLaserShots = newLaserShots.map((laserShot) => laserShot - numRowsCols.cols).filter((laserShot) => laserShot >= 0);
+
+    //         return newLaserShots;
+    //     });
+    // }, [laserBlasts, numRowsCols.cols]);
+
+    /** TODO: Have a conversation with Claude about mutating state and if line 175 is necessary. */
+    const moveAlienLasers = useCallback(() => {
+        if (alienLasers.length === 0) return;
+
+        setAlienLasers((prevAlienLasers) => {
+            const tempAlienLasers = [...prevAlienLasers];
+
+            return tempAlienLasers
+                .map(laser => laser + numRowsCols.cols)
+                .filter(laser => laser < numRowsCols.rows * numRowsCols.cols); // Remove lasers that go off screen
+        });
+    }, [alienLasers, numRowsCols]);
+
+    useEffect(() => {
+        if (alienLasers.length === 0) return;
+
+        const interval = setInterval(() => {
+            moveAlienLasers();
+        }, 150); // Slightly slower than player lasers
+
+        return () => clearInterval(interval);
+    }, [alienLasers, moveAlienLasers]);
+    // changelog-end
 
     useEffect(() => {
         if (!laserBlasts || laserBlasts.length === 0) return;
@@ -139,7 +253,7 @@ const About = () => {
         return leftmostColumn;
     }, []);
 
-    const getRightmostAliveAlien = (alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
+    const getRightmostAliveAlien = useCallback((alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
         const aliveAliens = alienLocation.filter(alien => alien >= 0);
         if (aliveAliens.length === 0) return -1;
 
@@ -154,7 +268,7 @@ const About = () => {
         });
 
         return rightmostCol;
-    };
+    }, []);
 
     const moveInvaders = useCallback(() => {
         const leftmostCol = getLeftmostAliveAlien(alienLocation, numRowsCols);
@@ -221,10 +335,10 @@ const About = () => {
             return tempAlienIndexes;
         });
     }, [
+        getLeftmostAliveAlien,
+        getRightmostAliveAlien,
         alienIndexes,
-        numRowsCols.cols,
-        firstIndexOfFirstRowThatAliensAreIn,
-        rowLength,
+        numRowsCols,
         alienLocation,
         clearAlienInterval,
     ]);
@@ -239,10 +353,19 @@ const About = () => {
                 setLaserBlasts(prevState => prevState.filter(laser => !impacts.includes(laser)));
             }
 
+            const alienHitsPlayer = alienLasers.includes(playerOneIndexRef.current);
+            if (alienHitsPlayer) {
+                // Handle player being hit
+                setAlienLasers(prev => prev.filter(laser => laser !== playerOneIndexRef.current));
+                // Add game over logic here
+            }
+
             tempGridState = tempGridState.map((square, index) => {
                 if (impacts.includes(index)) {
                     // if (laserBlasts.includes(index) && alienLocation.includes(index)) {
                     return createImpactElement(index);
+                } else if (alienLasers.includes(index)) {
+                    return createInvaderLaserBlast(index);
                 } else if (laserBlasts.includes(index)) {
                     return createLaserBlast(index);
                 } else if (alienLocation.includes(index)) {
@@ -255,6 +378,8 @@ const About = () => {
             return tempGridState;
         });
     }, [
+        alienLasers,
+        createInvaderLaserBlast,
         alienLocation,
         laserBlasts,
         createImpactElement,
@@ -310,6 +435,7 @@ const About = () => {
                 case 'ArrowDown':
                     startAlienInterval();
                     startGridInterval();
+                    startAlienFiring();
                     break;
                 case 'ArrowUp':
                     shootLaser();
@@ -317,6 +443,7 @@ const About = () => {
                 case 'End':
                     clearAlienInterval();
                     clearGridInterval();
+                    stopAlienFiring();
                     break;
                 default:
                     break;
@@ -337,6 +464,8 @@ const About = () => {
         shootLaser,
         startGridInterval,
         clearGridInterval,
+        startAlienFiring,
+        stopAlienFiring,
     ]);
 
     return (
@@ -354,13 +483,19 @@ const About = () => {
                         return (
                             <div
                                 key={'square-' + square.key}
-                                style={{ width: squareWidth, height: squareHeight, background: 'transparent' }}>
-                                <span style={{
+                                style={{
+                                    width: squareWidth,
+                                    height: squareHeight,
                                     display: 'flex',
-                                    alignItems: 'flex-start',
+                                    alignItems: 'center',
                                     justifyContent: 'center',
-                                    fontSize: '60px',
-                                }}>{'🛸'}</span>
+                                }}
+                            >
+                                <div style={{ transform: 'scale(1.2)' }}>
+                                    <MovieXWingFighter />
+                                    {/* <XWingOutlined /> */}
+                                    {/* <PlayerSpaceship /> */}
+                                </div>
                             </div>
                         );
                     }
