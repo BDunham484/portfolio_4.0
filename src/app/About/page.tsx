@@ -9,11 +9,11 @@ import MovieXWingFighter from './XWing';
 
 const About = () => {
     const {
-        gridSize,
+        // gridSize,
         numRowsCols,
         alienIndexes,
-        firstIndexOfFirstRowThatAliensAreIn,
-        rowLength,
+        // firstIndexOfFirstRowThatAliensAreIn,
+        // rowLength,
         playerOneStartingPosition,
         squares,
         // deadAliens,
@@ -22,38 +22,38 @@ const About = () => {
         squareHeight,
     } = useSpaceInvaders();
     const { ref } = useSectionInView(0.6);
-    const movingLeft = useRef<boolean>(true);
-    // const alienIndexRef = useRef<number[]>([]);
-    // const squaresRef = useRef<JSX.Element[] | undefined>([]);
+
+    // Player refs.
+    const playerOneIndexRef = useRef<number>(playerOneStartingPosition);
     const playerEngagedRef = useRef<boolean>(false);
+    // Grid movement refs.
+    const runGridIntervalRef = useRef<NodeJS.Timeout | null>(null);
+    const movingLeft = useRef<boolean>(true);
     const downShift = useRef<boolean>(false);
     const leftDownShifts = useRef<number>(1);
     const numOfRowsOfAliens = 5;
     const rightDownShifts = useRef<number>(numOfRowsOfAliens + 2);
+    // Alien movement refs.
     const alienIndexCounter = useRef<number>(0);
-
-    const {
-        gridSquares,
-        motionSection,
-        gridContainer,
-        deadGridSquare,
-    } = styles;
-
-    const [playerOneIndex, setPlayerOneIndex] = useState<number>(playerOneStartingPosition);
-    const playerOneIndexRef = useRef<number>(playerOneStartingPosition);
     const moveAliensIntervalRef = useRef<NodeJS.Timeout | null>(null);
-    const runGridIntervalRef = useRef<NodeJS.Timeout | null>(null);
-    const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
     const alienLocationRef = useRef<number[]>(alienIndexes);
-    const [gridState, setGridState] = useState<JSX.Element[]>(squares);
-    const [laserBlasts, setLaserBlasts] = useState<number[]>([]);
-    // const deadAliensRef = useRef<number[]>(deadAliens);
+    // Combat refs.
     const hitAlienRef = useRef<number>(-1);
     const laserShotsRef = useRef<number>(-1);
-    // changelog-start
-    const [alienLasers, setAlienLasers] = useState<number[]>([]);
     const alienFireIntervalRef = useRef<NodeJS.Timeout | null>(null);
-    // changelog-end
+
+    const [gridState, setGridState] = useState<JSX.Element[]>(squares);
+    const [playerOneIndex, setPlayerOneIndex] = useState<number>(playerOneStartingPosition);
+    const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
+    const [laserBlasts, setLaserBlasts] = useState<number[]>([]);
+    const [alienLasers, setAlienLasers] = useState<number[]>([]);
+
+    const {
+        // gridSquares,
+        motionSection,
+        gridContainer,
+        // deadGridSquare,
+    } = styles;
 
     const {
         createImpactElement,
@@ -61,6 +61,7 @@ const About = () => {
         createLaserBlast,
         createAlienElement,
         createTheInfiniteVoidOfSpaceElement,
+        blowEmUp,
     } = useGameElements({
         setAlienLocation,
         squareWidth,
@@ -78,10 +79,7 @@ const About = () => {
         if (!laserBlasts || laserBlasts.length === 0) return;
 
         setLaserBlasts((prevLaserShots) => {
-            // const removeIndex = prevLaserShots.indexOf(laserShotsRef.current);
             let newLaserShots = [...prevLaserShots];
-            // let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.filter((shot) => shot !== laserShotsRef.current)];
-
             /** Move all current laser shots forward */
             newLaserShots = newLaserShots.map((laserShot) => laserShot - numRowsCols.cols).filter((laserShot) => laserShot >= 0);
 
@@ -89,6 +87,7 @@ const About = () => {
         });
     }, [laserBlasts, numRowsCols.cols]);
 
+    // Ensures only aliens that have no other aliens below them in the same column can fire.
     const getAliensThatCanFire = useCallback((alienLocation: number[], numRowsCols: { rows: number, cols: number }) => {
         const aliveAliens = alienLocation.filter(alien => alien >= 0);
         const canFire: number[] = [];
@@ -134,7 +133,7 @@ const About = () => {
 
         alienFireIntervalRef.current = setInterval(() => {
             fireAlienLaser();
-        }, 2000 + Math.random() * 1000); // Randomize interval between 2-3 seconds
+        }, 2000 + Math.random() * 1000);
     }, [fireAlienLaser]);
 
     const stopAlienFiring = useCallback(() => {
@@ -143,21 +142,6 @@ const About = () => {
             alienFireIntervalRef.current = null;
         }
     }, []);
-
-    // const laserMotion = useCallback(() => {
-    //     if (!laserBlasts || laserBlasts.length === 0) return;
-
-    //     setLaserBlasts((prevLaserShots) => {
-    //         // const removeIndex = prevLaserShots.indexOf(laserShotsRef.current);
-    //         let newLaserShots = [...prevLaserShots];
-    //         // let newLaserShots = laserShotsRef.current < 0 ? [...prevLaserShots] : [...prevLaserShots.filter((shot) => shot !== laserShotsRef.current)];
-
-    //         /** Move all current laser shots forward */
-    //         newLaserShots = newLaserShots.map((laserShot) => laserShot - numRowsCols.cols).filter((laserShot) => laserShot >= 0);
-
-    //         return newLaserShots;
-    //     });
-    // }, [laserBlasts, numRowsCols.cols]);
 
     /** TODO: Have a conversation with Claude about mutating state and if line 175 is necessary. */
     const moveAlienLasers = useCallback(() => {
@@ -339,12 +323,16 @@ const About = () => {
         clearAlienInterval,
     ]);
 
+    // changelog-start
+    const [isPlayerDead, setIsPlayerDead] = useState(false);
+    // changelog-end
+
     const runGrid = useCallback(() => {
         setGridState((prevState) => {
             let tempGridState: JSX.Element[] = [...prevState];
             // Handle impacts.
             const impacts = laserBlasts.filter(laser => alienLocationRef.current.includes(laser));
-            // const impacts = laserBlasts.filter(laser => alienLocation.includes(laser));
+
             if (impacts.length > 0) {
                 setAlienLocation(prevState => prevState.map((alien) => impacts.includes(alien) ? -1 : alien));
                 setLaserBlasts(prevState => prevState.filter(laser => !impacts.includes(laser)));
@@ -358,7 +346,12 @@ const About = () => {
             }
 
             tempGridState = tempGridState.map((square, index) => {
-                if (impacts.includes(index)) {
+                if (alienHitsPlayer && index === playerOneIndexRef.current) {
+                    console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+                    setIsPlayerDead(true);
+
+                    return createImpactElement(index);
+                } else if (impacts.includes(index)) {
                     // if (laserBlasts.includes(index) && alienLocation.includes(index)) {
                     return createImpactElement(index);
                 } else if (alienLasers.includes(index)) {
@@ -452,18 +445,27 @@ const About = () => {
             document.removeEventListener('keydown', readyPlayerOne);
         };
     }, [
-        numRowsCols.cols,
         playerOneIndex,
+        // TODO: Are the next necessary?
+        numRowsCols.cols,
         squares.length,
         moveInvaders,
         startAlienInterval,
-        clearAlienInterval,
-        shootLaser,
         startGridInterval,
-        clearGridInterval,
         startAlienFiring,
+        shootLaser,
+        clearAlienInterval,
+        clearGridInterval,
         stopAlienFiring,
     ]);
+
+    const endGameByPlayerDeath = useCallback((index: number) => {
+        clearAlienInterval();
+        clearGridInterval();
+        stopAlienFiring();
+
+        return blowEmUp(index);
+    }, [blowEmUp, clearAlienInterval, clearGridInterval, stopAlienFiring]);
 
     return (
         <motion.section
@@ -488,11 +490,11 @@ const About = () => {
                                     justifyContent: 'center',
                                 }}
                             >
-                                <div style={{ transform: 'scale(1.2)' }}>
-                                    <MovieXWingFighter />
-                                    {/* <XWingOutlined /> */}
-                                    {/* <PlayerSpaceship /> */}
-                                </div>
+                                {isPlayerDead ? endGameByPlayerDeath(index) : (
+                                    <div style={{ transform: 'scale(1.2)' }}>
+                                        <MovieXWingFighter />
+                                    </div>
+                                )}
                             </div>
                         );
                     }

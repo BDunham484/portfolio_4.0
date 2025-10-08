@@ -3,6 +3,7 @@ import ExplosionEffect from '../Explosion';
 import InvaderLaser from '../InvaderLaser';
 import LaserBlast from '../LaserBlast';
 import ReactInvader from '../ReactInvader';
+import MovieXWingFighter from '../XWing';
 
 interface IProps {
     setAlienLocation: React.Dispatch<React.SetStateAction<number[]>>;
@@ -164,11 +165,94 @@ export const useGameElements = ({
         // changelog-end
     );
 
+    const blowEmUp = (index: number) => {
+        // Generate random positions for 8-12 explosions
+        const explosionCount = Math.floor(Math.random() * 5) + 8; // 8-12 explosions
+        const explosions = Array.from({ length: explosionCount }, (_, i) => {
+            // Random position that extends slightly beyond the square bounds
+            const offsetX = (Math.random() - 0.5) * squareWidth * 1.4;
+            const offsetY = (Math.random() - 0.5) * squareHeight * 1.4;
+            // Start explosions immediately with staggered starts
+            const startDelay = Math.random() * 0.5;
+            // After ship disappears (0.8s), wait 2s, then start tapering
+            const taperDelay = 2.8 + (i * 0.15);
+
+            return (
+                <div
+                    key={`explosion-${i}`}
+                    style={{
+                        position: 'absolute',
+                        left: '50%',
+                        top: '50%',
+                        transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`,
+                        animation: `explosionAppear 0.3s ease-out ${startDelay}s forwards, explosionTaper 0.8s ease-out ${taperDelay}s forwards`,
+                        pointerEvents: 'none',
+                    }}
+                >
+                    <ExplosionEffect />
+                </div>
+            );
+        });
+
+        return (
+            <div
+                key={'playerDestroyed' + index}
+                style={{
+                    width: squareWidth,
+                    height: squareHeight,
+                    margin: 0,
+                    padding: 0,
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                }}
+            >
+                {/* Flickering X-Wing that fades out */}
+                <div
+                    style={{
+                        animation: 'playerFlicker 0.8s ease-out forwards',
+                        transform: 'scale(1.2)',
+                    }}
+                >
+                    <MovieXWingFighter />
+                </div>
+                {/* Multiple explosions */}
+                {explosions}
+                <style>{`
+                    @keyframes playerFlicker {
+                        0% { opacity: 1; }
+                        10% { opacity: 0.3; }
+                        20% { opacity: 0.9; }
+                        30% { opacity: 0.2; }
+                        40% { opacity: 0.8; }
+                        50% { opacity: 0.1; }
+                        60% { opacity: 0.7; }
+                        70% { opacity: 0.3; }
+                        80% { opacity: 0.5; }
+                        90% { opacity: 0.2; }
+                        100% { opacity: 0; }
+                    }
+                    @keyframes explosionAppear {
+                        0% { opacity: 0; transform: scale(0.5); }
+                        100% { opacity: 1; transform: scale(1); }
+                    }
+                    @keyframes explosionTaper {
+                        0% { opacity: 1; }
+                        100% { opacity: 0; }
+                    }
+                `}</style>
+            </div>
+        );
+    };
+
     return {
         createImpactElement,
         createLaserBlast,
         createInvaderLaserBlast,
         createAlienElement,
         createTheInfiniteVoidOfSpaceElement,
+        blowEmUp,
     };
 };
