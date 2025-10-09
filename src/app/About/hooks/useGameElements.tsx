@@ -182,9 +182,9 @@ export const useGameElements = ({
                     key={`explosion-${i}`}
                     style={{
                         position: 'absolute',
-                        left: '50%',
-                        top: '50%',
-                        transform: `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`,
+                        left: `calc(50% + ${offsetX}px)`,
+                        top: `calc(50% + ${offsetY}px)`,
+                        transform: 'translate(-50%, -50%)',
                         animation: `explosionAppear 0.3s ease-out ${startDelay}s forwards, explosionTaper 0.8s ease-out ${taperDelay}s forwards`,
                         pointerEvents: 'none',
                     }}
@@ -235,8 +235,8 @@ export const useGameElements = ({
                         100% { opacity: 0; }
                     }
                     @keyframes explosionAppear {
-                        0% { opacity: 0; transform: scale(0.5); }
-                        100% { opacity: 1; transform: scale(1); }
+                        0% { opacity: 0; }
+                        100% { opacity: 1; }
                     }
                     @keyframes explosionTaper {
                         0% { opacity: 1; }
