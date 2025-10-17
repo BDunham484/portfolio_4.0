@@ -21,7 +21,18 @@ const About = () => {
         squareWidth,
         squareHeight,
     } = useSpaceInvaders();
+
     const { ref } = useSectionInView(0.6);
+
+    // changelog-start
+    useEffect(() => {
+        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+        console.log('💀💀💀💀 squares: ', squares);
+        console.log('💀💀💀💀 alienIndexes: ', alienIndexes);
+        console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
+        console.log(' ');
+    }, [squares, alienIndexes]);
+    // changelog-end
 
     // Player refs.
     const playerOneIndexRef = useRef<number>(playerOneStartingPosition);
@@ -47,6 +58,7 @@ const About = () => {
     const [alienLocation, setAlienLocation] = useState<number[]>(alienIndexes);
     const [laserBlasts, setLaserBlasts] = useState<number[]>([]);
     const [alienLasers, setAlienLasers] = useState<number[]>([]);
+    const [isPlayerDead, setIsPlayerDead] = useState(false);
 
     const {
         // gridSquares,
@@ -143,7 +155,6 @@ const About = () => {
         }
     }, []);
 
-    /** TODO: Have a conversation with Claude about mutating state and if line 175 is necessary. */
     const moveAlienLasers = useCallback(() => {
         if (alienLasers.length === 0) return;
 
@@ -156,11 +167,20 @@ const About = () => {
         });
     }, [alienLasers, numRowsCols]);
 
+    // Refs to keep functions stable in intervals
+    const moveAlienLasersRef = useRef(moveAlienLasers);
+    const laserMotionRef = useRef(laserMotion);
+
+    useEffect(() => {
+        moveAlienLasersRef.current = moveAlienLasers;
+        laserMotionRef.current = laserMotion;
+    }, [moveAlienLasers, laserMotion]);
+
     useEffect(() => {
         if (alienLasers.length === 0) return;
 
         const interval = setInterval(() => {
-            moveAlienLasers();
+            moveAlienLasersRef.current();
         }, 150); // Slightly slower than player lasers
 
         return () => clearInterval(interval);
@@ -170,7 +190,7 @@ const About = () => {
         if (!laserBlasts || laserBlasts.length === 0) return;
 
         const interval = setInterval(() => {
-            laserMotion();
+            laserMotionRef.current();
         }, 100);
 
         return () => clearInterval(interval);
@@ -197,8 +217,11 @@ const About = () => {
     }, [alienLocation]);
 
     useEffect(() => {
-        if (!playerEngagedRef.current && playerOneStartingPosition !== playerOneIndex) {
-            setPlayerOneIndex(playerOneStartingPosition);
+        // changelog-start
+        if (!playerEngagedRef.current && playerOneStartingPosition !== playerOneIndexRef.current) {
+        // if (!playerEngagedRef.current && playerOneStartingPosition !== playerOneIndex) {
+            // setPlayerOneIndex(playerOneStartingPosition);
+            // changelog-end
             playerOneIndexRef.current = playerOneStartingPosition;
         }
     }, [playerOneStartingPosition, playerOneIndex]);
@@ -323,10 +346,6 @@ const About = () => {
         clearAlienInterval,
     ]);
 
-    // changelog-start
-    const [isPlayerDead, setIsPlayerDead] = useState(false);
-    // changelog-end
-
     const runGrid = useCallback(() => {
         setGridState((prevState) => {
             let tempGridState: JSX.Element[] = [...prevState];
@@ -347,12 +366,10 @@ const About = () => {
 
             tempGridState = tempGridState.map((square, index) => {
                 if (alienHitsPlayer && index === playerOneIndexRef.current) {
-                    console.log('💀💀💀💀💀💀💀💀💀💀💀💀💀💀');
                     setIsPlayerDead(true);
 
                     return createImpactElement(index);
                 } else if (impacts.includes(index)) {
-                    // if (laserBlasts.includes(index) && alienLocation.includes(index)) {
                     return createImpactElement(index);
                 } else if (alienLasers.includes(index)) {
                     return createInvaderLaserBlast(index);
@@ -391,7 +408,6 @@ const About = () => {
 
         moveAliensIntervalRef.current = setInterval(() => {
             moveInvadersRef.current();
-            // moveInvaders();
         }, 1000);
     }, []);
 
@@ -400,32 +416,41 @@ const About = () => {
 
         runGridIntervalRef.current = setInterval(() => {
             runGridRef.current();
-            // runGrid();
         }, 100);
     }, []);
+
+
 
     /** Player keyboard controls */
     useEffect(() => {
         const readyPlayerOne = (event: KeyboardEvent) => {
             switch (event.key) {
                 case 'ArrowLeft':
-                    if (playerOneIndex % numRowsCols.cols !== 0) {
+                    // changelog-start
+                    if (!isPlayerDead && playerOneIndexRef.current % numRowsCols.cols !== 0) {
+                    // if (!isPlayerDead && playerOneIndex % numRowsCols.cols !== 0) {
+                        // changelog-end
                         playerEngagedRef.current = true;
-                        setPlayerOneIndex((prev) => prev - 1);
+                        // setPlayerOneIndex((prev) => prev - 1);
                         playerOneIndexRef.current = playerOneIndexRef.current - 1;
                     }
                     break;
                 case 'ArrowRight':
-                    if (playerOneIndex % numRowsCols.cols < numRowsCols.cols - 1) {
+                    // changelog-start
+                    if (!isPlayerDead && playerOneIndexRef.current % numRowsCols.cols < numRowsCols.cols - 1) {
+                    // if (!isPlayerDead && playerOneIndex % numRowsCols.cols < numRowsCols.cols - 1) {
+                        // changelog-end
                         playerEngagedRef.current = true;
-                        setPlayerOneIndex((prev) => prev + 1);
+                        // setPlayerOneIndex((prev) => prev + 1);
                         playerOneIndexRef.current = playerOneIndexRef.current + 1;
                     }
                     break;
                 case 'ArrowDown':
-                    startAlienInterval();
-                    startGridInterval();
-                    startAlienFiring();
+                    if (!isPlayerDead) {
+                        startAlienInterval();
+                        startGridInterval();
+                        startAlienFiring();
+                    }
                     break;
                 case 'ArrowUp':
                     shootLaser();
@@ -457,15 +482,22 @@ const About = () => {
         clearAlienInterval,
         clearGridInterval,
         stopAlienFiring,
+        isPlayerDead,
     ]);
 
-    const endGameByPlayerDeath = useCallback((index: number) => {
-        clearAlienInterval();
-        clearGridInterval();
-        stopAlienFiring();
-
-        return blowEmUp(index);
-    }, [blowEmUp, clearAlienInterval, clearGridInterval, stopAlienFiring]);
+    // Run end-game side effects on player death.
+    useEffect(() => {
+        if (isPlayerDead) {
+            clearAlienInterval();
+            clearGridInterval();
+            stopAlienFiring();
+        }
+    }, [
+        isPlayerDead,
+        clearAlienInterval,
+        clearGridInterval,
+        stopAlienFiring,
+    ]);
 
     return (
         <motion.section
@@ -478,7 +510,10 @@ const About = () => {
                 className={gridContainer}
             >
                 {gridState.map((square, index) => {
-                    if (index === playerOneIndex) {
+                    // changelog-start
+                    if (index === playerOneIndexRef.current) {
+                    // if (index === playerOneIndex) {
+                        // changelog-end
                         return (
                             <div
                                 key={'square-' + square.key}
@@ -490,7 +525,7 @@ const About = () => {
                                     justifyContent: 'center',
                                 }}
                             >
-                                {isPlayerDead ? endGameByPlayerDeath(index) : (
+                                {isPlayerDead ? blowEmUp(index) : (
                                     <div style={{ transform: 'scale(1.2)' }}>
                                         <MovieXWingFighter />
                                     </div>

@@ -151,6 +151,16 @@ export const SpaceInvadersProvider = ({ children }: { children: ReactNode }) => 
         gridSquares
     ]);
 
+    // changelog-start
+    useEffect(() => {
+        console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
+        console.log('👾👾👾👾 squares: ', squares);
+        console.log('👾👾👾👾 alienIndexes: ', alienIndexes);
+        console.log('👾👾👾👾👾👾👾👾👾👾👾👾👾👾');
+        console.log(' ');
+    }, [squares, alienIndexes]);
+    // changelog-end
+
     const contextValue = {
         gridRef,
         gridSize,
